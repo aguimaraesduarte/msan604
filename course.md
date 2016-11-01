@@ -180,25 +180,25 @@ We've seen that the ACF can provide information regarding which model may be app
 
 Let $x_1, x_2, \ldots, x_n$ be our observed time series.
 
-- the **sample mean** is $\widehat{\mu_x} = \bar{x} = \frac{1}{n} \sum_{i=1}^n x_i$,
-- the **sample autocovariance** is $\widehat{\gamma_x}(h) = \frac{1}{n} \sum_{t=1}^{n-h} (x_{t+h} - \bar{x})(x_t - \bar{x})$,
-- the **sample autocorrelation** is $\widehat{\rho_x}(h) = \frac{\widehat{\gamma_x}(h)}{\widehat{\gamma_x}(0)}$
+- the **sample mean** is $\hat{\mu}_x = \bar{x} = \frac{1}{n} \sum_{i=1}^n x_i$,
+- the **sample autocovariance** is $\hat{\gamma}_x(h) = \frac{1}{n} \sum_{t=1}^{n-h} (x_{t+h} - \bar{x})(x_t - \bar{x})$,
+- the **sample autocorrelation** is $\hat{\rho}_x(h) = \frac{\hat{\gamma}_x(h)}{\hat{\gamma}_x(0)}$
 
 Note:
 
 - $\theta$, a Greek letter, denotes a paramters (unknown number),
-- $\widehat{\theta}$, is a sample estimate of $\theta$ (known number),
-- $\widetilde{\theta}$, is an estimator, a random variable.
+- $\hat{\theta}$, is a sample estimate of $\theta$ (known number),
+- $\tilde{\theta}$, is an estimator, a random variable.
 
 The sample ACF can be used to investigate the "uncorrelatedness" in a time series. For example, we might use this to evaluate the uncorrelated assumption in residuals.
 
 (Reminder: independence $\Rightarrow$ uncorrelated; uncorrelated $\not\Rightarrow$ independence)
 
-For stationary time series, $\widetilde{\rho}(h) \dot{\sim} N(0, \frac{1}{n})$ (n = number of data points).
+For stationary time series, $\tilde{\rho}(h) \dot{\sim} N(0, \frac{1}{n})$ (n = number of data points).
 
 Consequently, an approximate 95% confidence interval for $\rho_x(h)$ is $\pm \frac{1.96}{\sqrt{n}}$.
 
-If $\widetilde{\rho}(h)$ falls outside these limits, for any h, we judge this to be significant.
+If $\tilde{\rho}(h)$ falls outside these limits, for any h, we judge this to be significant.
 
 _SACF Examples.R_
 
@@ -239,7 +239,7 @@ Remarks:
 
 - An MA(q) process is **q-correlated** (i.e., $\rho_X(h) = Corr(X_t, X_{t-h}) = 0$ for $h > q$ and not necessarily 0 for $h \leq q$)
 
-Thus, **the ACF signature of an MA(q) process is non-zero spiked for $h=0, 1, 2, \ldots, q$ and then no spikes for ever after**.
+Thus, **the ACF signature of an MA(q) process is non-zero spikes for $h=0, 1, 2, \ldots, q$ and then no spikes for ever after**.
 
 - An MA(q) process can be denoted as: $X_t = \epsilon_t + \theta_1B^1\epsilon_t + \ldots + \theta_qB^q\epsilon_t = (1 + \sum_{s=1}^q \theta_sB^s)\epsilon_t = \theta^q(B)\epsilon_t$
 
@@ -272,7 +272,7 @@ where $\epsilon_t \sim WN(0, \sigma^2)$ and $\Phi_1, \Phi_2, \ldots, \Phi_p$ are
 
 - An AR(p) process can be denoted as:
 
-$X_t - \Phi_1 X_{t-1} - \Phi X_{t-2} - \ldots - \Phi_p X_{t-p} = \epsilon_t$
+$X_t - \Phi_1 X_{t-1} - \Phi_2 X_{t-2} - \ldots - \Phi_p X_{t-p} = \epsilon_t$
 
 $\Leftrightarrow X_t - \Phi_1 B^1 X_t - \Phi_2 B^2 X_t - \ldots - \Phi_p B^p X_t = \epsilon_t$
 
@@ -292,22 +292,22 @@ $\Phi(z) = 1 - \Phi z \Rightarrow \Phi(z) = 0$ if $z = \frac{1}{\Phi}$
 
 For stationarity, we need $|z| > 1 \Rightarrow |\frac{1}{\Phi}| > 1 \Rightarrow |\Phi| > 1$.
 
-# Partial Autocorrelation Dunction(PACF)
+# Partial Autocorrelation Function(PACF)
 
 For a stationary process, the ACF of lag h measures the correlation between $X_t$ and $X_{t+h}$. This correlation could be dure to a direct connection between $X_t$ and $X_{t+h}$, but it may also be influenced by observations at intermediate lags: $X_{t+1}, X_{t+2}, \ldots, X_{t+h-1}$.
 
 The PACF of lag h measures the correlation between $X_t$ and $X_{t+h}$ once the influence of the intermediate lags has been removed/accounted/controled for.
 
 We remove this effect using **linear predictors**:
-$$\widehat{X_t} = Pred(X_t | X_{t_1}, X_{t+2}, \ldots, X_{t+h-1})$$
-$$\widehat{X_{t+h}} = Pred(X_{t+h} | X_{t_1}, X_{t+2}, \ldots, X_{t+h-1})$$
+$$\hat{X}_t = Pred(X_t | X_{t_1}, X_{t+2}, \ldots, X_{t+h-1})$$
+$$\hat{X}_{t+h} = Pred(X_{t+h} | X_{t_1}, X_{t+2}, \ldots, X_{t+h-1})$$
 where this prediction is commonly based on a linear regression.
 
 Thus, for a stationary time series \{X_t\}, the **partial autocorrelation function of lag h** is:
 $\alpha_X(h) = \begin{cases}
 Corr(X_t, X_t) = 1, & \mbox{if } h=0 \\
 Corr(X_t, X_{t+1}) = \rho_X(1), & \mbox{if } h=1 \\
-Corr(X_t, X_{t+h}) = Corr(X_t - \widehat{X_t}, X_{t+h} - \widehat{X_{t+h}}), & \mbox{if } h>1
+Corr(X_t, X_{t+h}) = Corr(X_t - \hat{X}_t, X_{t+h} - \hat{X}_{t+h}), & \mbox{if } h>1
 \end{cases}$
 
 (assume without loss of generality that $h \geq 0$)
@@ -323,7 +323,7 @@ $\alpha_X(h) = \begin{cases}
 
 If $h=2$:
 
--$\alpha(2) = Corr[X_t = \widehat{X_t}, X_{t+2} - \widehat{X_{t+2}}] = Corr[X_t - f(X_{t+1}), X_{t+2} - \Phi X_{t+1}] = Corr[X_t - f(X_{t+1}), \epsilon_{t+2}] = Corr[X_t, \epsilon_{t+2}] - Corr[f(X_{t+1}), \epsilon_{t+2}] = 0 - 0 = 0$
+-$\alpha(2) = Corr[X_t = \hat{X}_t, X_{t+2} - \hat{X}_{t+2}] = Corr[X_t - f(X_{t+1}), X_{t+2} - \Phi X_{t+1}] = Corr[X_t - f(X_{t+1}), \epsilon_{t+2}] = Corr[X_t, \epsilon_{t+2}] - Corr[f(X_{t+1}), \epsilon_{t+2}] = 0 - 0 = 0$
 
 We can see that $\alpha(h) = 0$ for any $h \geq 2$.
 
@@ -364,7 +364,114 @@ $$
 \end{tabular}
 $$
 
+\newpage
+11/01/16
+
+# ARMA Stationarity and Invertibility Conditions
+
+**ARMA(p,q)**: $\Phi(B)X_t = \theta(B)\epsilon_t$, $\{\epsilon_t\} \sim WN(o, \sigma^2$
+
+where $\Phi(z) = 1 - \Phi_1 z - \Phi_2 z^2 - \ldots - \Phi_p z^p$
+
+and $\theta(z) = 1 + \theta_1 z + \theta_2 z^2 + \ldots + \theta_q z^q$.
+
+$\{X_t\} \sim ARMA(p,q)$ is stationary if 
+
+- $\Phi(z) = 1 - \Phi_1 z - \Phi_2 z^2 - \ldots - \Phi_p z^p \neq 0$ for all $z$ such that $|z| \leq 1$ i.e., the modulus of all roots/zeros are $> 1$ (the complex roots of this generating function lie outside the unit circle in the complex plane).
+
+A **causal** ARMA process is stationary.
+
+$\{X_t\} \sim ARMA(p,q)$ is invertible if 
+
+- $\theta(z) = 1 + \theta_1 z + \theta_2 z^2 + \ldots + \theta_q z^q \neq 0$ for all $z$ such that $|z| \leq 1$ i.e., the modulus of all roots/zeros are $> 1$ (the complex roots of this generating function lie outside the unit circle in the complex plane).
+
+This criterion is equivalent to requiring that $\epsilon_t$ can be written as an infinite weighted sum of the $X_t$'s.
+
+**Note**: we require an MA(q) process, or the MA component of an ARMA(p,q) process to be invertible so that
+
+- (i) we can estimate the $\theta$'s in the model
+- (ii) we can forecast with the model
+
+For the sake of usefulness, we'll restrict attention to ARMA(p,q) models that are stationary/causal and invertible. 
+
+### Example (quiz question)
+**ARMA(2,1)**
+
+$\Phi^2(B)X_t = \theta^1(B)\epsilon_t$
+
+- _Represent this in "expanded notation"_
+
+$(1 - \Phi_1 B - \Phi_2 B^2) X_t = (1 + \theta B) \epsilon_t$
+
+$X_t - \Phi_1 X_{t-1} - \Phi_2 X_{t-2} = \epsilon_t + \theta \epsilon_{t-1}$
 
 
+_Let $\Phi_1 = 0.75$, $\Phi_2 = -0.5625$, $\theta=1.25$_
 
+- _Is $\{X_t\}$ stationary?_
 
+$\Phi^2(z) = 1 - 0.75z + 0.5625z^2$
+
+$\Rightarrow \Phi^2(z) = 0 \Leftrightarrow z = \frac{-b \pm \sqrt(b^2 - 4ac)}{2a} = \frac{0.75 \pm \sqrt(0.75^2 - 4(0.5625)(1)))}{2(0.5625)} = 2(\frac{1 \pm \sqrt{-3}}{3}) = \frac{2 \pm 2i\sqrt{3}}{3}$
+
+$\Rightarrow z_1 = \frac{2}{3} - \frac{2\sqrt{3}}{3}i, z_2 = \frac{2}{3} + \frac{2\sqrt{3}}{3}i$
+
+$\Rightarrow |z_1| = |z_2| = \sqrt{(2/3)^2 + (2\sqrt{3}/3)^2} = \frac{4}{3}$
+
+So $|z_1| = |z_2| > 1$.
+
+$\therefore$ this ARMA(2,1) process is stationary.
+
+- _Is $\{X_t\}$ invertible?_
+
+$\theta(z) = 1 + 1.25z$
+
+$\Rightarrow \theta(z) = 0 \Leftrightarrow 1 + 1.25z = 0 \Leftrightarrow z = -0.8$
+
+$\Rightarrow |z| = 0.8 < 1$.
+
+$\therefore$ this ARMA(2,1) process is **not** invertible.
+
+**Note**: also, the roots of the polynomials are **distinct**, so the process is in fact an ARMA(2,1) process, and not a simpler one.
+
+In practice, with an observed time series, we decide whether it is stationary and/or invertible with "**unit root tests**".
+
+# "Box-Jenkins Approach"
+
+- **Identification**: identify the orders of the model $\leftarrow$ use ACF/PACF plot
+
+- **Estimation**: estimate the parameters of the model identified in step 1
+
+- **Verification**: ensure that the model is appropriate $\leftarrow$ residual diagnostics
+
+## Estimating ARMA(p,q) Models
+
+**Goal**: estimate $\Phi_1, \Phi_2, \ldots, \Phi_p, \theta_1, \theta_2, \ldots, \theta_q, \sigma^2$ ins a stationary and invertible ARMA(p,q) process: $\Phi^p(B)X_t = \theta^q(B)\epsilon_t$.
+
+- we assume that $\{X_t\}$ has zero mean, or has been "mean-corrected"
+
+These parameters are estimated using the observed time series $\{x_1, x_2, \ldots, x_n\}$.
+
+Many methods (cf. Chap. 5) exist for doing this, but we'll just focus, at a high level, on Maximum Likelihood and Least Squares. 
+
+### Maximum Likelihood method for ARMA(p,q)
+
+- We have to make distributional assumptions, which may not be valid
+
+- We typically assume $\{X_t\}$ is a "Gaussian"time series i.e., $\vec{X} = (X_1, X_2, \ldots, X_n)^T \sim MVN$
+
+	* This seems limiting, but in practice it's not bad
+
+$L(\Phi_1, \Phi_2, \ldots, \Phi_p, \theta_1, \theta_2, \ldots, \theta_q, \sigma^2 | \vec{x}) = \frac{1}{(2\pi)^{n/2}|\Gamma_n|^{1/2}}\exp{\{-\frac{1}{2} \vec{x}^T \Gamma_n^{-1} \vec{x}\}}$ where $\vec{x} = (x_1, x_2, \ldots, x_n)^T$ and $\Gamma_n = Cov(\vec{X}, \vec{X}^T)$ (this is the matrix with $\gamma_X(0)$ in the diagonal, $\gamma_X(1)$ in the 1-subdiagonals, $\ldots$, $\gamma_X(n-1)$ in the two corners)
+ 
+ We want to find the values of the parameters that maximize this function in light of the observed data. We typically numerically maximize $l(\cdot)$, the log-likelihood function to find $(\hat{\Phi}_1, \hat{\Phi}_2, \ldots, \hat{\Phi}_p, \hat{\theta}_1, \hat{\theta}_2, \ldots, \hat{\theta}_q, \hat{\sigma}^2)$.
+
+The usual asymptotic properties of ML estimators exist here as well. This is the basis for CI calculations.
+
+### Least Squares method for ARMA(p,q)
+
+The goal is to minimize $S(\Phi, \theta) = S(\Phi_1, \Phi_2, \ldots, \Phi_p, \theta_1, \theta_2, \ldots, \theta_q)$ rather than maximize $L(\cdot)$, where
+$$S(\Phi, \theta) = \sum_{j=1}^n \frac{(X_j - \hat{X}_j)^2}{r_{j-1}}$$
+where $E[(X_j - \hat{X}_j)^2] = \sigma^2 r_{j-1}$ $\rightarrow$ LSE of $\sigma^2$ is $\hat{\sigma}^2 = \frac{S(\hat{\Phi}, \hat{\theta})}{n-p-q}$ \ \ \ \ \ \ \ \ \ \ ($r_{j-1} = Var(X_j - \hat{X}_j)$)
+
+LSE is good because no distributional assumptions need to be made.
