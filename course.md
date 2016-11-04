@@ -75,7 +75,8 @@ $X_t = \sum_{i=0}^p \beta_i t^i + \sum_{j=1}^3 \alpha_j W_j + \epsilon_t$, $\eps
 
 _AirPassengers Analysis.R_
 
-\newpage
+$------------------------------------------------------$
+
 10/25/16
 
 # Recap
@@ -202,7 +203,8 @@ If $\tilde{\rho}(h)$ falls outside these limits, for any h, we judge this to be 
 
 _SACF Examples.R_
 
-\newpage
+$------------------------------------------------------$
+
 10/27/16
 
 # Recap
@@ -294,20 +296,20 @@ For stationarity, we need $|z| > 1 \Rightarrow |\frac{1}{\Phi}| > 1 \Rightarrow 
 
 # Partial Autocorrelation Function(PACF)
 
-For a stationary process, the ACF of lag h measures the correlation between $X_t$ and $X_{t+h}$. This correlation could be dure to a direct connection between $X_t$ and $X_{t+h}$, but it may also be influenced by observations at intermediate lags: $X_{t+1}, X_{t+2}, \ldots, X_{t+h-1}$.
+For a stationary process, the ACF of lag h measures the correlation between $X_t$ and $X_{t+h}$. This correlation could be due to a direct connection between $X_t$ and $X_{t+h}$, but it may also be influenced by observations at intermediate lags: $X_{t+1}, X_{t+2}, \ldots, X_{t+h-1}$.
 
 The PACF of lag h measures the correlation between $X_t$ and $X_{t+h}$ once the influence of the intermediate lags has been removed/accounted/controled for.
 
 We remove this effect using **linear predictors**:
-$$\hat{X}_t = Pred(X_t | X_{t_1}, X_{t+2}, \ldots, X_{t+h-1})$$
-$$\hat{X}_{t+h} = Pred(X_{t+h} | X_{t_1}, X_{t+2}, \ldots, X_{t+h-1})$$
+$$\hat{X}_t = Pred(X_t | X_{t+1}, X_{t+2}, \ldots, X_{t+h-1})$$
+$$\hat{X}_{t+h} = Pred(X_{t+h} | X_{t+1}, X_{t+2}, \ldots, X_{t+h-1})$$
 where this prediction is commonly based on a linear regression.
 
-Thus, for a stationary time series \{X_t\}, the **partial autocorrelation function of lag h** is:
+Thus, for a stationary time series $\{X_t\}$, the **partial autocorrelation function of lag h** is:
 $\alpha_X(h) = \begin{cases}
 Corr(X_t, X_t) = 1, & \mbox{if } h=0 \\
 Corr(X_t, X_{t+1}) = \rho_X(1), & \mbox{if } h=1 \\
-Corr(X_t, X_{t+h}) = Corr(X_t - \hat{X}_t, X_{t+h} - \hat{X}_{t+h}), & \mbox{if } h>1
+Corr(X_t, X_{t+h}) = Corr(X_t - \hat{X}_t, X_{t+h} - \hat{X}_{t+h}) & \mbox{if } h>1
 \end{cases}$
 
 (assume without loss of generality that $h \geq 0$)
@@ -317,13 +319,13 @@ Corr(X_t, X_{t+h}) = Corr(X_t - \hat{X}_t, X_{t+h} - \hat{X}_{t+h}), & \mbox{if 
 Derive the PACF of an AR(1) process $X_t = \Phi X_{t-1} + \epsilon_t$.
 
 $\alpha_X(h) = \begin{cases}
-1, & \mbox{if } h=0 \\
+1 & \mbox{if } h=0 \\
 \rho(1) = \Phi & \mbox{if } h=1
 \end{cases}$
 
 If $h=2$:
 
--$\alpha(2) = Corr[X_t = \hat{X}_t, X_{t+2} - \hat{X}_{t+2}] = Corr[X_t - f(X_{t+1}), X_{t+2} - \Phi X_{t+1}] = Corr[X_t - f(X_{t+1}), \epsilon_{t+2}] = Corr[X_t, \epsilon_{t+2}] - Corr[f(X_{t+1}), \epsilon_{t+2}] = 0 - 0 = 0$
+- $\alpha(2) = Corr[X_t - \hat{X}_t, X_{t+2} - \hat{X}_{t+2}] = Corr[X_t - f(X_{t+1}), X_{t+2} - \Phi X_{t+1}] = Corr[X_t - f(X_{t+1}), \epsilon_{t+2}] = Corr[X_t, \epsilon_{t+2}] - Corr[f(X_{t+1}), \epsilon_{t+2}] = 0 - 0 = 0$
 
 We can see that $\alpha(h) = 0$ for any $h \geq 2$.
 
@@ -350,7 +352,7 @@ Remark:
 
 $\Phi^1(B)X_t = \theta^2(B)\epsilon_t \Rightarrow (1-\Phi B)X_t = (1+\theta_1B + \theta_2B^2)\epsilon_t \Rightarrow X_t - \Phi X_{t-1} = \epsilon_t + \theta_1\epsilon_{t-1} + \theta_2\epsilon_{t-2}$
 
-We require $\begin{cases} \Phi^1(z) = 1 - \Phi Z\\ \theta^2(z) = 1 + \theta_1z + \theta_2z^2 \end{cases}$
+We require $\begin{cases} \Phi^1(z) = 1 - \Phi z\\ \theta^2(z) = 1 + \theta_1z + \theta_2z^2 \end{cases}$
 
 $$
 \begin{tabular}{c|c|c}
@@ -358,13 +360,14 @@ $$
 \hline
 \textbf{MA(q)} & Spike for $h \leq q$ and negligibly small spikes for $h > q$ & Exponential decay\\
 \hline
-\textbf{AR(p)} & Exponential decay & Spiked for $h \leq p$ and "nothing" for $h > p$\\
+\textbf{AR(p)} & Exponential decay & Spikes for $h \leq p$ and "nothing" for $h > p$\\
 \hline
 \textbf{ARMA(p,q)} & q spikes then decay & p spikes then decay\\
 \end{tabular}
 $$
 
-\newpage
+$------------------------------------------------------$
+
 11/01/16
 
 # ARMA Stationarity and Invertibility Conditions
@@ -412,7 +415,7 @@ _Let $\Phi_1 = 0.75$, $\Phi_2 = -0.5625$, $\theta=1.25$_
 
 $\Phi^2(z) = 1 - 0.75z + 0.5625z^2$
 
-$\Rightarrow \Phi^2(z) = 0 \Leftrightarrow z = \frac{-b \pm \sqrt(b^2 - 4ac)}{2a} = \frac{0.75 \pm \sqrt(0.75^2 - 4(0.5625)(1)))}{2(0.5625)} = 2(\frac{1 \pm \sqrt{-3}}{3}) = \frac{2 \pm 2i\sqrt{3}}{3}$
+$\Rightarrow \Phi^2(z) = 0 \Leftrightarrow z = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a} = \frac{0.75 \pm \sqrt{0.75^2 - 4(0.5625)(1)})}{2(0.5625)} = 2(\frac{1 \pm \sqrt{-3}}{3}) = \frac{2 \pm 2i\sqrt{3}}{3}$
 
 $\Rightarrow z_1 = \frac{2}{3} - \frac{2\sqrt{3}}{3}i, z_2 = \frac{2}{3} + \frac{2\sqrt{3}}{3}i$
 
@@ -446,7 +449,7 @@ In practice, with an observed time series, we decide whether it is stationary an
 
 ## Estimating ARMA(p,q) Models
 
-**Goal**: estimate $\Phi_1, \Phi_2, \ldots, \Phi_p, \theta_1, \theta_2, \ldots, \theta_q, \sigma^2$ ins a stationary and invertible ARMA(p,q) process: $\Phi^p(B)X_t = \theta^q(B)\epsilon_t$.
+**Goal**: estimate $\Phi_1, \Phi_2, \ldots, \Phi_p, \theta_1, \theta_2, \ldots, \theta_q, \sigma^2$ in a stationary and invertible ARMA(p,q) process: $\Phi^p(B)X_t = \theta^q(B)\epsilon_t$.
 
 - we assume that $\{X_t\}$ has zero mean, or has been "mean-corrected"
 
@@ -458,7 +461,7 @@ Many methods (cf. Chap. 5) exist for doing this, but we'll just focus, at a high
 
 - We have to make distributional assumptions, which may not be valid
 
-- We typically assume $\{X_t\}$ is a "Gaussian"time series i.e., $\vec{X} = (X_1, X_2, \ldots, X_n)^T \sim MVN$
+- We typically assume $\{X_t\}$ is a "Gaussian" time series i.e., $\vec{X} = (X_1, X_2, \ldots, X_n)^T \sim MVN$
 
 	* This seems limiting, but in practice it's not bad
 
@@ -466,7 +469,7 @@ $L(\Phi_1, \Phi_2, \ldots, \Phi_p, \theta_1, \theta_2, \ldots, \theta_q, \sigma^
  
  We want to find the values of the parameters that maximize this function in light of the observed data. We typically numerically maximize $l(\cdot)$, the log-likelihood function to find $(\hat{\Phi}_1, \hat{\Phi}_2, \ldots, \hat{\Phi}_p, \hat{\theta}_1, \hat{\theta}_2, \ldots, \hat{\theta}_q, \hat{\sigma}^2)$.
 
-The usual asymptotic properties of ML estimators exist here as well. This is the basis for CI calculations.
+The usual asymptotic properties of MLE exist here as well. This is the basis for CI calculations.
 
 ### Least Squares method for ARMA(p,q)
 
@@ -475,3 +478,111 @@ $$S(\Phi, \theta) = \sum_{j=1}^n \frac{(X_j - \hat{X}_j)^2}{r_{j-1}}$$
 where $E[(X_j - \hat{X}_j)^2] = \sigma^2 r_{j-1}$ $\rightarrow$ LSE of $\sigma^2$ is $\hat{\sigma}^2 = \frac{S(\hat{\Phi}, \hat{\theta})}{n-p-q}$ \ \ \ \ \ \ \ \ \ \ ($r_{j-1} = Var(X_j - \hat{X}_j)$)
 
 LSE is good because no distributional assumptions need to be made.
+
+$------------------------------------------------------$
+
+11/03/16
+
+# Order Selection
+
+- Choose $p$ and $q$ "optimally". 
+
+- Use "goodness of fit" methods to compare different models.
+
+	* $l(\hat{\theta}, \hat{\Phi}) =$ maximized log-likelihood. $\leftarrow$ we want this to be big
+
+	* $\hat{\sigma}^2 =$ estimate of the error variance $\sigma^2$. $\leftarrow$ we want this to be small
+
+	* $AIC = -2l(\hat{\theta}, \hat{\Phi}) + 2(p+q+1)$. $\leftarrow$ we want this to be small
+
+- It's sensible to consider all 3 of these, but an "optimal" model for one may not be the "optimal" model according to another.
+
+- A disadvantage to LSE is that we don't have a likelihood function and so $l(\hat{\theta}, \hat{\Phi})$ and $AIC$ are not available goodness of fit metrics in this case.
+
+_ARMA Fitting Example.R_
+
+We can compare the fit of two models using a **likelihood ratio test (LRT)**.
+
+$\begin{cases}
+H_0:  & \mbox{null and alternative models fit equally well}\\
+H_a: & \mbox{alternative model fits better than the null}\\
+\end{cases}$
+
+Note: the null model is simples (has fewer parameters) relative to the alternative.
+
+$$D = -2\log{(\frac{L(null\ model)}{L(alt.\ model)})} \sim \Chi^2_{(m_A-m_0)}$$
+
+null model has $m_o$ parameters, alt.model has $m_A$ parameters, $m_A > m_0$.
+
+$$D = -2(l(null\ model) - l(alt.\ model))$$
+
+Larger values of $D$ lead to rejection of $H_0$. p-value = $P(W \geq D) = 1- P(W < D)$ where $W \sim \Chi^2_{m_A-m_0}$
+
+# Verification (Residual Diagnostics)
+
+Suppose $\{X_t\}$ is a time series and we believe an ARMA(p,q) model can model it. We'll call the **fitted value** at time t $\hat{X}_t$. We define the residuals as $$\hat{e}_t = X_t - \hat{X}_t \text{\ \ \ \ \ for } t = 1, 2, \ldots, n$$
+
+If assumptions are met, the residual time series $\{\hat{e}_t\}$ should behave like the white nois sequence that generated the ARMA(p,q) process. In particular, we should find that $\{\hat{e}_t\}$
+
+i. have approximately zero mean
+ii. have a constant variance
+iii. are uncorrelated (/ independent iff $\{\epsilon_t\} \sim IID(0, \sigma^2)$)
+iv. are normally distributed (if $\{\epsilon_t\} \sim N(0, \sigma^2)$) $\leftarrow$ only if you are not using MLE
+
+We can either work with the residuals, $\hat{e}_t$, or the **standardized residuals**, $\hat{r}_t = \frac{\hat{e}_t}{\hat{\sigma}}$ (expect the variance to be 1).
+
+## Informal Diagnostics (plots)
+
+- Plot $\hat{e}_t$ vs. $t$ (or $\hat{r}_t$ vs. $t$)
+
+	* change of variability with time? i.e. heteroskedasticity
+
+		+ this checks ii.
+
+	* check whether points are scattered symmetrically around 0
+
+		+ this checks i.
+
+	* systematic trends in the residuals can suggest correlation
+
+		+ this checks iii.
+
+	* check for outliers (using $\hat{r}_t$ is sensible)
+
+- ACF of $\hat{e}_t$ (or $\hat{r}_t$)
+
+	* use this to check whether residuals seem to be correlated
+
+		+ this checks iii.
+
+	* should see no significant spikes for $h > 0$
+
+- QQ-plot or histogram
+
+	* use this to check whether the residuals seem normally distributed
+
+		+ this checks iv.
+
+## Formal Disgnostics (hypothesis tests)
+
+- To check $E[\epsilon_t]$, do a one-sample t-test of the residuals
+
+- To check heteroskedasticity, we can use Bartlett's Test or Levene's Test
+
+	* these tests require us to partition the data set (the residuals) into $k$ groups. The goal is to look for homogeneity of variance among these groups
+
+	* $\begin{cases} H_0: \sigma_1^2 = \sigma_2^2 = \ldots = \sigma_k^2 & \\ H_a: \sigma_i^2 \neq \sigma_j^2 & \mbox{ for some } i \neq j \end{cases}$
+
+	* Bartlett's test is sensitive to non-normality, but Levene's test isn't. But if the data are normally distributed, Bartlett's test is more powerful
+
+- To check uncorrelatedness, we're interested in testing
+
+	* $\begin{cases} H_0: \rho(1) = \rho(2) = \ldots = \rho(H) = 0 & \\ H_a: \rho(h) \neq 0 & \mbox{ for some } h = 1, 2, \ldots, H \end{cases}$
+
+	* we prefer this test as opposed to using an ACF because it avoids the **multiple hypothesis testing problem**
+
+	* we use "Portmanteau" tests in this case. We consider the **Ljung-Box** test
+
+- To check for normality, use the **Shapiro-Wilk** test where
+
+	* $\begin{cases} H_0: \{\hat{e}_t\} \sim N(0, \sigma^2)\\ H_a: \{\hat{e}_t\} \nsim N(0, \sigma^2) \end{cases}$

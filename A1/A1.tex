@@ -104,7 +104,7 @@ b. Deduce that the random variable $f(X)$ that minimizes $E[(Y - f(X))^2|X]$ is 
 $E[(Y - f(X))^2|X] = E[Y^2 - 2Yf(X) + f^2(X)|X]
                    = E[Y^2|X] - 2E[Yf(X)|X] + E[f^2(X)|X]$.
 
-$f^2(X)$ given $X$ is a constant, so we get:
+$f(X)$ and $f^2(X)$ given $X$ are constant, so we get:
 
 $E[(Y - f(X))^2|X] = E[Y^2|X] - 2f(X)E[Y|X] + f^2(X)$.
 
@@ -268,7 +268,11 @@ $\mu_{X+Y} = E[X_t + Y_t]
            = E[X_t] + E[Y_t]
            = \mu_X + \mu_Y$
 
-$\gamma_{X+Y}(h) = Cov(X_t + Y_t, X_{t+h} + Y_{t+h}) = Cov(X_t, X_{t+h}) + Cov(Y_t, Y_{t+h}) = \gamma_X(h) + \gamma_Y(h)$
+$\gamma_{X+Y}(h) = Cov(X_t + Y_t, X_{t+h} + Y_{t+h}) = Cov(X_t, X_{t+h}) + Cov(X_t, Y_{t+h}) + Cov(Y_t, X_{t+h}) + Cov(Y_t, Y_{t+h})$.
+
+Since $\{X_t\}$ and $\{Y_t\}$ are uncorrelated, we get
+
+$\gamma_{X+Y}(h) = Cov(X_t, X_{t+h}) + Cov(Y_t, Y_{t+h}) = \gamma_X(h) + \gamma_Y(h)$
 
 $\mu_{X+Y}$ and $\gamma_{X+Y}(h)$ are independent of $t$, so the process is stationary.
 \color{black}
@@ -357,11 +361,11 @@ $\gamma_X(t)$ & = & $Cov(X_t, X_{t+h})$\\
               & = &
 $\begin{cases}
 \sigma^2(1 + \theta_1^2 + \theta_2^2 + \ldots + \theta_q^2) & \mbox{if } h = 0\\
-\sigma^2(\theta_1 + \theta_1 \theta_2 + \theta_2 \theta_3 + \ldots + \theta_{q-1} \theta_q) & \mbox{if } h \pm 1\\
-\sigma^2(\theta_2 + \theta_2 \theta_3 + \theta_3 \theta_4 + \ldots + \theta_{q-1} \theta_q) & \mbox{if } h \pm 2\\
+\sigma^2(\theta_1 + \theta_1 \theta_2 + \theta_2 \theta_3 + \ldots + \theta_{q-1} \theta_q) & \mbox{if } h = \pm 1\\
+\sigma^2(\theta_2 + \theta_2 \theta_3 + \theta_3 \theta_4 + \ldots + \theta_{q-1} \theta_q) & \mbox{if } h = \pm 2\\
 \ldots & \ldots\\
-\sigma^2(\theta_{q-1} + \theta_{q-1} \theta_q) & \mbox{if } h \pm q-1\\
-\sigma^2(\theta_q) & \mbox{if } h \pm q-1\\
+\sigma^2(\theta_{q-1} + \theta_{q-1} \theta_q) & \mbox{if } h = \pm (q-1)\\
+\sigma^2(\theta_q) & \mbox{if } h = \pm q\\
 0 & \mbox{otherwise}
 \end{cases}$\\
 \end{tabular}
@@ -381,11 +385,11 @@ $\rho_X(h)$ & = & $\frac{\gamma_X(h)}{\gamma_X(0)}$\\
             & = &
 $\begin{cases}
 1 & \mbox{if } h = 0\\
-\frac{\theta_1 + \theta_1 \theta_2 + \theta_2 \theta_3 + \ldots + \theta_{q-1} \theta_q}{1 + \theta_1^2 + \theta_2^2 + \ldots + \theta_q^2} & \mbox{if } h \pm 1\\
-\frac{\theta_2 + \theta_2 \theta_3 + \theta_3 \theta_4 + \ldots + \theta_{q-1} \theta_q}{1 + \theta_1^2 + \theta_2^2 + \ldots + \theta_q^2} & \mbox{if } h \pm 2\\
+\frac{\theta_1 + \theta_1 \theta_2 + \theta_2 \theta_3 + \ldots + \theta_{q-1} \theta_q}{1 + \theta_1^2 + \theta_2^2 + \ldots + \theta_q^2} & \mbox{if } h = \pm 1\\
+\frac{\theta_2 + \theta_2 \theta_3 + \theta_3 \theta_4 + \ldots + \theta_{q-1} \theta_q}{1 + \theta_1^2 + \theta_2^2 + \ldots + \theta_q^2} & \mbox{if } h = \pm 2\\
 \ldots & \ldots\\
-\frac{\theta_{q-1} + \theta_{q-1} \theta_q}{1 + \theta_1^2 + \theta_2^2 + \ldots + \theta_q^2} & \mbox{if } h \pm q-1\\
-\frac{\theta_q}{1 + \theta_1^2 + \theta_2^2 + \ldots + \theta_q^2} & \mbox{if } h \pm q-1\\
+\frac{\theta_{q-1} + \theta_{q-1} \theta_q}{1 + \theta_1^2 + \theta_2^2 + \ldots + \theta_q^2} & \mbox{if } h = \pm (q-1)\\
+\frac{\theta_q}{1 + \theta_1^2 + \theta_2^2 + \ldots + \theta_q^2} & \mbox{if } h = \pm q\\
 0 & \mbox{otherwise}
 \end{cases}$\\
 \end{tabular}
@@ -536,7 +540,7 @@ In order to assess the model, we perform diagnostics on the residuals, as shown 
 \label{diag_seas}
 \end{figure}
 
-We can see from the first plot that there seems to be a higher density of values to the left of the graph, which could be a sign of heteroskedasticity. But no clear "funnel-shape" can be distinguished, so homoskedasticity can be assumed. The QQ-plot indicates that the residuals do not deviate too much from normality. From the sequence plot, we can say that the residuals seem randomly distributed and therefore independent. Finally, the ACF plot shows a main pattern of exponential decay with a little bit of seasonality still. Maybe an AR model could be adequate in this data set.
+We can see from the first plot that there seems to be a higher density of values to the left of the graph, which could be a sign of heteroskedasticity. But no clear "funnel-shape" can be distinguished, so homoskedasticity can be assumed. The QQ-plot indicates that the residuals do not deviate too much from normality. From the sequence plot, we can say that the residuals seem randomly distributed and therefore independent. Finally, the ACF plot shows a main pattern of exponential decay with a little bit of seasonality still (although non-significant). This is representative of an AR process.
 
 \color{black}
 

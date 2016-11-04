@@ -17,7 +17,7 @@ pacf(BJ2)
 
 #These perhaps suggest that p<=3, q<=1. Let's now perform Step #2: "Estimation"
 #Try fitting some of these models using ML
-fit.ar <- arima(BJ2, order=c(3,0,0)) #AR(3)
+fit.ar <- arima(BJ2, order=c(3,0,0)) #AR(3) use include.mean=F to not estimate mu (valid in this case)
 fit.ar
 fit.ma <- arima(BJ2, order=c(0,0,1)) #MA(1)
 fit.ma
@@ -76,7 +76,7 @@ d[order(d$AIC),]
 
 # Compare MA(1) with ARMA(1,2)
 D <- -2*(m5$loglik - m11$loglik)
-pval <- 1-pchisq(D,3)
+pval <- 1-pchisq(D,2)
 print(c("Test Statistic:",D,"P-value:",pval))
 
 #Once we choose a model, we perform Step #3: Verification. That is, we perform model diagnostics 
