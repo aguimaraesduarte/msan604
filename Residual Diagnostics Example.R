@@ -1,7 +1,7 @@
 # Diagnostic Checking Example #
 
 #install.packages('lawstat')
-library(lawstat) # levene.test and runs.test need this
+library(lawstat) # levene.test needs this
 
 # Using residual diagnistics, we will check the assumptions of the residuals.
 # We do this for the "optimal" model associated with last day's investigation of the BJsales data.
@@ -26,25 +26,24 @@ plot(r, main="Standardized Residuals vs t", ylab="")
 abline(h=0, col="red")
 
 # test whether residuals have zero mean
-t.test(e)
+t.test(e) #do not reject H0
 
 # test for heteroscedasticity
 par(mfrow=c(1,1))
 plot(e, main="Residuals vs t", ylab="")
 abline(v=c(37,74,111), lwd=3, col="red")
 group <- c(rep(1,37),rep(2,37),rep(3,37),rep(4,37))
-levene.test(e,group) #Levene
-bartlett.test(e,group) #Bartlett   
+levene.test(e,group) #Levene #do not reject H0
+bartlett.test(e,group) #Bartlett #do not reject H0
 
 # test for uncorrelatedness / randomness
 tsdiag(m) #ACF and Ljung-Box test all in one!
-runs.test(e) #Runs test for randomness
 
 # test for normality
 par(mfrow=c(1,1))
 qqnorm(e, main="QQ-plot of Residuals")
-qqline(e)
+qqline(e, col = "red")
 shapiro.test(e) #SW test
-
+# if not normal, re-fit the model with LSE instead of MLE!
 
 
