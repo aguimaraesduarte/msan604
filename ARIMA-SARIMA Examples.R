@@ -90,7 +90,7 @@ m.ml
 par(mfrow=c(1,1))
 plot(log(AirPassengers))
 fit <- log(AirPassengers)-m.ml$residuals
-lines(fit, col="red") #note: we "loose" the fit for the first period
+lines(fit, col="red") #note: we "lose" the fit for the first period
 plot(AirPassengers)
 lines(exp(fit), col="red")
 

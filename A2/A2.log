@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2016.10.27)  13 NOV 2016 07:07
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2016.10.27)  17 NOV 2016 08:58
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -929,97 +929,173 @@ Overfull \hbox (7.51878pt too wide) in paragraph at lines 208--222
 [][] 
  []
 
-[2] [3]
-LaTeX Font Info:    Try loading font information for T1+lmtt on input line 272.
+[2]
+LaTeX Font Info:    Try loading font information for T1+lmtt on input line 271.
 
  (/usr/share/texmf/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <12> not available
-(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 272.
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 271.
 Package microtype Info: Loading generic settings for font family
 (microtype)             `lmtt' (encoding: T1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
-
-<huronplot.png, id=49, 602.25pt x 451.6875pt>
+ [3]
+<huronplot.png, id=55, 602.25pt x 451.6875pt>
 File: huronplot.png Graphic file (type png)
  <use huronplot.png>
 Package pdftex.def Info: huronplot.png used on input line 290.
 (pdftex.def)             Requested size: 375.81718pt x 281.86288pt.
 
-<huron1plot.png, id=51, 602.25pt x 451.6875pt>
+<huron1plot.png, id=57, 602.25pt x 451.6875pt>
 File: huron1plot.png Graphic file (type png)
  <use huron1plot.png>
-Package pdftex.def Info: huron1plot.png used on input line 308.
+Package pdftex.def Info: huron1plot.png used on input line 309.
 (pdftex.def)             Requested size: 375.81718pt x 281.86288pt.
  [4 <./huronplot.png (PNG copy)>] [5 <./huron1plot.png (PNG copy)>]
-LaTeX Font Info:    Try loading font information for OMS+lmr on input line 366.
+LaTeX Font Info:    Try loading font information for OMS+lmr on input line 369.
 
 
 (/usr/share/texmf/tex/latex/lm/omslmr.fd
 File: omslmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `OMS/lmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/lmsy/m/n' tried instead on input line 366.
+(Font)              Font shape `OMS/lmsy/m/n' tried instead on input line 369.
 
-<huronseq.png, id=65, 602.25pt x 451.6875pt>
+<huronseq.png, id=69, 602.25pt x 451.6875pt>
 File: huronseq.png Graphic file (type png)
  <use huronseq.png>
-Package pdftex.def Info: huronseq.png used on input line 396.
+Package pdftex.def Info: huronseq.png used on input line 399.
 (pdftex.def)             Requested size: 375.81718pt x 281.86288pt.
 
-<huronhomo.png, id=67, 602.25pt x 451.6875pt>
+<huronhomo.png, id=72, 602.25pt x 451.6875pt>
 File: huronhomo.png Graphic file (type png)
  <use huronhomo.png>
-Package pdftex.def Info: huronhomo.png used on input line 416.
+Package pdftex.def Info: huronhomo.png used on input line 419.
 (pdftex.def)             Requested size: 375.81718pt x 281.86288pt.
- [6]
-
-LaTeX Warning: Text page 7 contains only floats.
-
-[7 <./huronseq.png (PNG copy)> <./huronhomo.png (PNG copy)>]
-<huronljung.png, id=79, 602.25pt x 451.6875pt>
+ [6] [7 <./huronseq.png (PNG copy)> <./huronhomo.png (PNG copy)>]
+<huronljung.png, id=84, 602.25pt x 451.6875pt>
 File: huronljung.png Graphic file (type png)
  <use huronljung.png>
-Package pdftex.def Info: huronljung.png used on input line 431.
+Package pdftex.def Info: huronljung.png used on input line 434.
 (pdftex.def)             Requested size: 375.81718pt x 281.86288pt.
 
-<huronqq.png, id=81, 602.25pt x 451.6875pt>
+<huronqq.png, id=86, 602.25pt x 451.6875pt>
 File: huronqq.png Graphic file (type png)
  <use huronqq.png>
-Package pdftex.def Info: huronqq.png used on input line 449.
+Package pdftex.def Info: huronqq.png used on input line 452.
 (pdftex.def)             Requested size: 375.81718pt x 281.86288pt.
  [8 <./huronljung.png (PNG copy)>]
-Underfull \hbox (badness 1147) in paragraph at lines 464--465
+Underfull \hbox (badness 1147) in paragraph at lines 467--468
 []\T1/lmr/m/n/10 (+20) (a) Us-ing tech-niques dis-cussed in class, fit (us-ing 
 max-i-mum like-li-hood es-ti-ma-tion) an ^^Pop-ti-mal^^Q
  []
 
-<beer.png, id=89, 602.25pt x 451.6875pt>
+<beer.png, id=94, 602.25pt x 451.6875pt>
 File: beer.png Graphic file (type png)
  <use beer.png>
-Package pdftex.def Info: beer.png used on input line 486.
+Package pdftex.def Info: beer.png used on input line 481.
+(pdftex.def)             Requested size: 375.81718pt x 281.86288pt.
+
+<lbeer.png, id=96, 602.25pt x 451.6875pt>
+File: lbeer.png Graphic file (type png)
+ <use lbeer.png>
+Package pdftex.def Info: lbeer.png used on input line 496.
 (pdftex.def)             Requested size: 375.81718pt x 281.86288pt.
  [9 <./huronqq.png (PNG copy)>]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 524.
- [10 <./beer.png (PNG copy)>]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 524.
- (./A2.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 524.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 524.
+
+LaTeX Warning: Text page 10 contains only floats.
+
+[10 <./beer.png> <./lbeer.png>] <lbeeracf.png, id=110, 602.25pt x 451.6875pt>
+File: lbeeracf.png Graphic file (type png)
+
+<use lbeeracf.png>
+Package pdftex.def Info: lbeeracf.png used on input line 511.
+(pdftex.def)             Requested size: 375.81718pt x 281.86288pt.
+ <lbeertrend.png, id=112, 602.25pt x 451.6875pt>
+File: lbeertrend.png Graphic file (type png)
+
+<use lbeertrend.png>
+Package pdftex.def Info: lbeertrend.png used on input line 530.
+(pdftex.def)             Requested size: 375.81718pt x 281.86288pt.
+ [11 <./lbeeracf.png (PNG copy)>]
+<lbeerseas.png, id=120, 602.25pt x 451.6875pt>
+File: lbeerseas.png Graphic file (type png)
+ <use lbeerseas.png>
+Package pdftex.def Info: lbeerseas.png used on input line 549.
+(pdftex.def)             Requested size: 375.81718pt x 281.86288pt.
+
+<lbeeracfpacf.png, id=122, 602.25pt x 451.6875pt>
+File: lbeeracfpacf.png Graphic file (type png)
+ <use lbeeracfpacf.png>
+Package pdftex.def Info: lbeeracfpacf.png used on input line 568.
+(pdftex.def)             Requested size: 375.81718pt x 281.86288pt.
+
+[12 <./lbeertrend.png (PNG copy)>]
+Overfull \vbox (8.58458pt too high) has occurred while \output is active []
+
+
+[13 <./lbeerseas.png (PNG copy)> <./lbeeracfpacf.png (PNG copy)>]
+<beerpred.png, id=135, 602.25pt x 451.6875pt>
+File: beerpred.png Graphic file (type png)
+ <use beerpred.png>
+Package pdftex.def Info: beerpred.png used on input line 607.
+(pdftex.def)             Requested size: 375.81718pt x 281.86288pt.
+ [14 <./beerpred.png (PNG copy)>] <lbeerseq.png, id=142, 602.25pt x 451.6875pt>
+File: lbeerseq.png Graphic file (type png)
+
+<use lbeerseq.png>
+Package pdftex.def Info: lbeerseq.png used on input line 647.
+(pdftex.def)             Requested size: 375.81718pt x 281.86288pt.
+ [15 <./lbeerseq.png (PNG copy)>]
+<lbeerhomo.png, id=150, 602.25pt x 451.6875pt>
+File: lbeerhomo.png Graphic file (type png)
+ <use lbeerhomo.png>
+Package pdftex.def Info: lbeerhomo.png used on input line 667.
+(pdftex.def)             Requested size: 375.81718pt x 281.86288pt.
+
+<lbeerljung.png, id=151, 602.25pt x 451.6875pt>
+File: lbeerljung.png Graphic file (type png)
+ <use lbeerljung.png>
+Package pdftex.def Info: lbeerljung.png used on input line 682.
+(pdftex.def)             Requested size: 375.81718pt x 281.86288pt.
+ [16 <./lbeerhomo.png (PNG copy)>] <lbeerqq.png, id=159, 602.25pt x 451.6875pt>
+File: lbeerqq.png Graphic file (type png)
+
+<use lbeerqq.png>
+Package pdftex.def Info: lbeerqq.png used on input line 705.
+(pdftex.def)             Requested size: 375.81718pt x 281.86288pt.
+ <lbeerhist.png, id=160, 602.25pt x 451.6875pt>
+File: lbeerhist.png Graphic file (type png)
+
+<use lbeerhist.png>
+Package pdftex.def Info: lbeerhist.png used on input line 712.
+(pdftex.def)             Requested size: 375.81718pt x 281.86288pt.
+ [17 <./lbeerljung.png (PNG copy)>]
+
+LaTeX Warning: Text page 18 contains only floats.
+
+[18 <./lbeerqq.png (PNG copy)> <./lbeerhist.png (PNG copy)>] [19]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 799.
+ [20]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 799.
+
+(./A2.aux)
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 799.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 799.
 Package rerunfilecheck Info: File `A2.out' has not changed.
-(rerunfilecheck)             Checksum: 4CCBCB5E5D0AA733FB9DD9FE450F1A2C;287.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 524.
+(rerunfilecheck)             Checksum: F42AE66AEE4B55951E3E972C344F51EB;327.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 799.
  ) 
 Here is how much of TeX's memory you used:
- 11215 strings out of 494953
- 167115 string characters out of 6180976
- 298800 words of memory out of 5000000
- 14235 multiletter control sequences out of 15000+600000
- 42631 words of font info for 57 fonts, out of 8000000 for 9000
+ 11329 strings out of 494953
+ 168604 string characters out of 6180976
+ 299521 words of memory out of 5000000
+ 14291 multiletter control sequences out of 15000+600000
+ 44125 words of font info for 75 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 36i,8n,68p,348b,486s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 36i,8n,68p,822b,488s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf/fonts/enc/dvips/lm/lm-ec.enc}{/usr/share/texmf/fonts/enc/dv
 ips/lm/lm-mathex.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-rm.enc}{/usr/share
 /texmf/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm
@@ -1033,10 +1109,10 @@ re/texmf/fonts/type1/public/lm/lmr7.pfb></usr/share/texmf/fonts/type1/public/lm
 /lmsy10.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy7.pfb></usr/share/texmf
 /fonts/type1/public/lm/lmtk10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt1
 0.pfb>
-Output written on A2.pdf (10 pages, 538645 bytes).
+Output written on A2.pdf (20 pages, 1095571 bytes).
 PDF statistics:
- 160 PDF objects out of 1000 (max. 8388607)
- 125 compressed objects within 2 object streams
- 25 named destinations out of 1000 (max. 500000)
- 11332 words of extra memory for PDF output out of 12000 (max. 10000000)
+ 247 PDF objects out of 1000 (max. 8388607)
+ 189 compressed objects within 2 object streams
+ 47 named destinations out of 1000 (max. 500000)
+ 11395 words of extra memory for PDF output out of 12000 (max. 10000000)
 

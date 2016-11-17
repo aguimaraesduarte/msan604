@@ -97,7 +97,7 @@ The roots of $\phi(z)$ are $z = \frac{-0.2 \pm \sqrt{(0.2)^2 + 4(0.48)^2}}{2(-0.
 
 We have $|z_1| > 1$ and $|z_2| > 1$, so the process is \textbf{stationary}.
 
-In addition, we have $\theta (z) = 1$. So the process is \textbf{invertible}.
+In addition, we have $\theta (z) = 1 \neq 0\ \forall z$. So the process is \textbf{invertible}.
 \color{black}
 
 b. $X_t + 1.9 X_{t-1} + 0.88 X_{t-2} = Z_t + 0.2 Z_{t-1} + 0.7 Z_{t-2}$
@@ -267,7 +267,6 @@ Therefore, we can conclude that the process $\{Z_t\}$ is stationary.
 \color{black}
 
 
-\newpage
 \section{Additional Problems}
 \subsection{ARIMA fitting with the \texttt{LakeHuron} dataset.}
 The \texttt{LakeHuron} dataset contains annual measurements of the level, in feet, of Lake Huron between 1875 and 1972.
@@ -280,7 +279,8 @@ We start by plotting the data and the ACF plot:
 \begin{Verbatim}[frame=single]
 # Plot original data
 par(mfrow=c(2,1))
-plot(LakeHuron)
+plot(LakeHuron, main="Height of Lake Huron Through the Years",
+     xlab = "Year", ylab = "Height (ft)")
 acf(LakeHuron)
 adf.test(LakeHuron)
 \end{Verbatim}
@@ -298,7 +298,8 @@ We get the plots shown in Figure \ref{huronplot}, where we can see that the proc
 \begin{Verbatim}[frame=single]
 # Difference once
 LakeHuron1 <- diff(LakeHuron)
-plot(LakeHuron1)
+plot(LakeHuron1, main="Differenced Height of Lake Huron Through the Years",
+     xlab = "Year", ylab = "Height (ft)")
 acf(LakeHuron1)
 adf.test(LakeHuron1)
 \end{Verbatim}
@@ -322,6 +323,7 @@ We fit an AR(1) model to the 1-differenced data:
 
 \begin{Verbatim}[frame=single]
 m1 <- arima(LakeHuron1, order = c(1,0,0))
+summary(m1)
 \end{Verbatim}
 
 For this model, we get $\hat{\sigma}^2 = 0.5452$, log likelihood = -108.23, and aic = 222.45.
@@ -330,10 +332,11 @@ For this model, we get $\hat{\sigma}^2 = 0.5452$, log likelihood = -108.23, and 
 (c) Fit an $AR(2)$ model to the d-differenced \texttt{LakeHuron} data, using maximum likelihood estimation.
 
 \color{blue}
-We fit an AR(1) model to the 1-differenced data:
+We fit an AR(2) model to the 1-differenced data:
 
 \begin{Verbatim}[frame=single]
-m2 <- arima(LakeHuron1, order = c(1,0,0))
+m2 <- arima(LakeHuron1, order = c(2,0,0))
+summary(m2)
 \end{Verbatim}
 
 For this model, we get $\hat{\sigma}^2 = 0.5188$, log likelihood = -105.87, and aic = 219.74.
@@ -347,18 +350,18 @@ We perform a Likelihood Ratio Test to compare the two models. Here, the null mod
 
 \begin{Verbatim}[frame=single]
 # Compare the two models using LRT
-D <- -2*(m2$loglik - m1$loglik)
+D <- -2*(m1$loglik - m2$loglik)
 pval <- 1-pchisq(D,1)
 print(c("Test Statistic:",round(D,4),"P-value:",round(pval,4)))
 \end{Verbatim}
 
-We get a p-value of 1, so we do not reject the null hypothesis that the two models fit equally well.
+We get a p-value of 0.0299, so we reject the null hypothesis that the two models fit equally well, and accept the alternative that the AR(2) model fits better.
 \color{black}
 
-(e) Using your results from (d) and an assessment of $AIC$ and $\hat{sigma}^2$ for each model, state which model you deem to be “optimal” and briefly explain this choice.
+(e) Using your results from (d) and an assessment of $AIC$ and $\hat{\sigma}^2$ for each model, state which model you deem to be “optimal” and briefly explain this choice.
 
 \color{blue}
-From the result in (d), we are inclined to choose the simpler model \texttt{m1}. By comparing $AIC$ and $\hat{sigma}^2$, we see that they are slightly higher for \texttt{m1}. However, the difference does not seem enough to warrant using the AR(2) model in this case.
+From the result in (d), we are inclined to choose the AR(2) model \texttt{m2}. By comparing $AIC$ and $\hat{\sigma}^2$, we see that they are lower for \texttt{m2}, confirming that this model fits better.
 \color{black}
 
 (f) Using appropriate formal and informal residual diagnostics, investigate whether the “optimal” model you’ve chosen in (e) satisfies the following assumptions
@@ -374,8 +377,8 @@ We start by extracting the residuals from the model:
 
 \begin{Verbatim}[frame=single]
 # Residual diagnostics
-e <- m1$residuals # residuals
-r <- e/sqrt(m1$sigma2) # standardized residuals
+e <- m2$residuals # residuals
+r <- e/sqrt(m2$sigma2) # standardized residuals
 \end{Verbatim}
 
 Then, we plot the residuals against time. The horizontal line at 0 makes it easier to see whether the data seems to have zero-mean.
@@ -398,9 +401,9 @@ t.test(e)
 \label{huronseq}
 \end{figure}
 
-The plots in Figure \ref{huronseq} show that the process seems to have zero-mean. We can also say that it looks homoskedastic, and we can't discern any correlation nor outliers. The result from the t-test produces a p-value of 0.9765, so we do not reject the null hypothesis that the mean is zero.
+The plots in Figure \ref{huronseq} show that the process seems to have zero-mean. We can also say that it looks homoskedastic, and we can't discern any correlation nor outliers. The result from the t-test produces a p-value of 0.9888, so we do not reject the null hypothesis that the mean is zero.
 
-In order to test Homoskedasticity, we split our data into four groups of similar length. Then we use Bartlett's and Levene's tests to check whether the variance in each group is statistically equal.
+In order to test Homoskedasticity, we split our data into four groups of similar length, as seen in Figure \ref{huronhomo}. Then we use Bartlett's and Levene's tests to check whether the variance in each group is statistically equal.
 \begin{Verbatim}[frame=single]
 # test for heteroscedasticity
 par(mfrow=c(1,1))
@@ -418,7 +421,7 @@ bartlett.test(e,group) #Bartlett
 \label{huronhomo}
 \end{figure}
 
-Bartlett's test produces a p-value of 0.2522, and Levene's test 0.1644. Therefore neither null hypothesis is rejected, and we conclude that the process is homoskedastic.
+Bartlett's test produces a p-value of 0.1629, and Levene's test 0.2029. Therefore neither null hypothesis is rejected, and we conclude that the process is homoskedastic.
 
 To formally check for uncorrelatedness, we use the Ljung-Box test:
 \begin{Verbatim}[frame=single]
@@ -451,9 +454,9 @@ shapiro.test(e) #SW test
 \label{huronqq}
 \end{figure}
 
-The QQ-plot in Figure \ref{huronqq} seems OK, and Shapiro-Wilk's test produces a p-value of 0.5982, so we do not reject the null hypothesis that the residuals are normally distributed.
+The QQ-plot in Figure \ref{huronqq} seems OK, and Shapiro-Wilk's test produces a p-value of 0.4233, so we do not reject the null hypothesis that the residuals are normally distributed.
 
-All the residual diagnostics satisfy the assumptions, so we can accept the AR(1) model to model this process.
+All the residual diagnostics satisfy the assumptions, so we can accept the AR(2) model to model this process.
 \color{black}
 
 \newpage
@@ -464,52 +467,153 @@ in millions of litres, from January 1956 to August 1995.
 (a) Using techniques discussed in class, fit (using maximum likelihood estimation) an “optimal” $SARIMA(p,d,q) \times (P,D,Q)$ model to the \texttt{beers.csv} time series, and justify your choice of $p, d, q, P, D, Q$ and $s$.
 
 \color{blue}
-We start by importing the data:
+We start by importing the data and plotting the series:
 \begin{Verbatim}[frame=single]
 # Load data
 beer <- read.csv("beer.csv", header=T)
-beer <- ts(beer, start = 1956, end = 1995, frequency = 12)
-\end{Verbatim}
-The term \texttt{frequency=12} is used to indicate that the data is separated by months.
-
-Then, we can plot the process, as well as the ACF plot to determine stationarity and seasonality:
-\begin{Verbatim}[frame=single]
-# Plot the data
-par(mfrow=c(2,1))
-plot(beer)
-acf(beer, lag.max = 144)
-adf.test(beer)
+beer <- ts(beer, start = c(1956,1), frequency = 12)
+plot(beer, main="Beer Production in Australia",
+     xlab="Year", ylab="Production (x1e6 L)")
 \end{Verbatim}
 
 \begin{figure}[!ht]
 \centering
 \includegraphics[width=.8\textwidth]{beer.png}
-\caption{Plot of beer data set and ACF plot.}
+\caption{Plot of beer data set.}
 \label{beer}
 \end{figure}
 
-The resulting plots shown in Figure \ref{beer} show that the time series is not stationary. However, the Augmented Dickey-Fuller test produces a significant p-value, which would suggest that we reject the null hypothesis that the process is not stationary.
-
-
-Now, we difference again in order to remove the seasonality pattern.
+The term \texttt{frequency=12} is used to indicate that the data is separated by months. We get the plot shown in Figure \ref{beer}. We can see that there seems to be a polynomial trend as well as seasonality in the process. In addition, the amplitude of the variations seem to increase with time, so we may think about doing a log transformation on the data. This is what we do, and we check the resulting plot:
 \begin{Verbatim}[frame=single]
-# Difference for seasonality (period=12)
-beer1.12 <- diff(beer1, lag = 12)
-plot(beer1.12)
-acf(beer1.12, lag.max = 144)
+# Take log-transform of the data
+lbeer <- log(beer)
+plot(lbeer, main="Beer Production in Australia",
+     xlab="Year", ylab="Log of Production (x1e6 L)")
 \end{Verbatim}
 
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=.8\textwidth]{lbeer.png}
+\caption{Plot of log-transformed beer data set.}
+\label{lbeer}
+\end{figure}
 
+As seen in Figure \ref{lbeer}, the amplitude of the oscillations now seems more even throughout time.
 
+We can then look at the ACF plot of the series to check for ordinary and/or seasonal differencing that may be necessary:
 \begin{Verbatim}[frame=single]
-
+# check whether ordinary and/or seasonal differencing is necessary
+acf(lbeer, lag.max = 96)
 \end{Verbatim}
 
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=.8\textwidth]{lbeeracf.png}
+\caption{ACF of log-transformed beer data set.}
+\label{lbeeracf}
+\end{figure}
+
+Figure \ref{lbeeracf} shows slow decay as well as a sinusoidal pattern. This indicates that both trend and seasonality are present in the data and need to be accounted for. We start with ordinary differencing:
+
+\begin{Verbatim}[frame=single]
+# Both forms of differencing seem necessary. Let's do ordinary first:
+par(mfrow=c(2,1))
+dlbeer <- diff(lbeer)
+plot(dlbeer, main="Trend corrected Beer Production in Australia",
+     xlab="Year", ylab="Log of Production (x1e6 L)")
+acf(dlbeer, lag.max=48)
+adf.test(dlbeer)
+\end{Verbatim}
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=.8\textwidth]{lbeertrend.png}
+\caption{Trend-corrected log-transformed beer data set.}
+\label{lbeertrend}
+\end{figure}
+
+The resulting plots shown in Figure \ref{lbeertrend} seem ok. Also, the ADF test produces a p-value inferior to 0.01, so we reject the null hypothesis that the process is not stationary: we do not need to difference again. We have d=1.
+
+Now, we perform seasonal differencing with lag 12 (this value was determined by counting how many "peaks" are in one period in the ACF plot):
+\begin{Verbatim}[frame=single]
+# Still need seasonal differencing:
+dlbeer.12 <- diff(dlbeer, lag=12)
+plot(dlbeer.12, main="Trend and Seasonality Corrected Beer Production in Australia",
+     xlab="Year", ylab="Log of Production (x1e6 L)")
+acf(dlbeer.12, lag.max=48)
+adf.test(dlbeer.12, k=12)
+\end{Verbatim}
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=.8\textwidth]{lbeerseas.png}
+\caption{Seasonal and trend-corrected log-transformed beer data set.}
+\label{lbeerseas}
+\end{figure}
+
+The resulting plots shown in Figure \ref{lbeerseas} seem ok. Also, the ADF test produces a p-value inferior to 0.01, so we reject the null hypothesis that the process is not stationary: we do not need to seasonally difference again. We have D=1 and s=12.
+
+Now that we have appropriately differenced, we know that we are fitting a SARIMA model, and therefore need to choose p, P, q, and Q. In order to do so, we look at the ACF and PACF plots of the differences data:
+\begin{Verbatim}[frame=single]
+# This seems fine now. Since we seasonally differenced, we are fitting a SARIMA model
+# and need to choose p, P, q, Q.
+# Let's look at the ACF/PACF plots for this
+par(mfrow=c(2,1))
+acf(dlbeer.12, lag.max=48)
+pacf(dlbeer.12, lag.max=48)
+\end{Verbatim}
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=.8\textwidth]{lbeeracfpacf.png}
+\caption{ACF and PACF plots of log-transformed beer data set.}
+\label{lbeeracfpacf}
+\end{figure}
+
+From the two plots shown in Figure \ref{lbeeracfpacf}, we can infer the following hypotheses: $p \leq 5, q \leq 4, P = 0, Q = 1$. Therefore, we fit the SARIMA $(5,1,4)\times(0,1,1)_{12}$ model (more details on the selection of this particular model in the Annex):
+\begin{Verbatim}[frame=single]
+# Fit model
+m <- arima(lbeer, c(3,1,4), list(order=c(0,1,1), period=12))
+summary(m)
+\end{Verbatim}
+
+For this model, we get the following coefficients and standard errors:
+
+\begin{center}
+\begin{tabular}{c|c|c|c|c|c|c|c|c}
+Coefficients&$\phi_1$&$\phi_2$&$\phi_3$&$\theta_1$&$\theta_2$&$\theta_3$&$\theta_4$&$\Theta_1$\\
+\hline
+Values&-0.3895&-0.1163&0.7648&-0.6452&-0.2173&-0.8401&0.8296&-0.8385\\
+S.E.&0.0627&0.0724&0.0627&0.0489&0.0156&0.0172&0.0459&0.0297\\
+\end{tabular}
+\end{center}
+
+In addition, we have $\hat{\sigma}^2 = 0.003702$, log-likelihood = 626.99, AIC = -1235.99.
+
+We can now visualize how this model fits our data:
+\begin{Verbatim}[frame=single]
+# Let's visualize how well this model fits
+f <- lbeer - m$residuals # fitted values
+par(mfrow=c(1,1))
+plot(beer, main="Beer Production in Australia",
+     xlab="Year", ylab="Production (x1e6 L)")
+lines(exp(f), col="red")
+legend("bottomright", legend = c("Observed", "Predicted"),
+       lty = 1, col = c("black", "red"))
+\end{Verbatim}
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=.8\textwidth]{beerpred.png}
+\caption{Plot of original beer data set and model predictions.}
+\label{beerpred}
+\end{figure}
+
+From Figure \ref{beerpred}, we can see that this model fits the data well. The predicted values closely follow the original data.
 
 \color{black}
 
 (b) Using appropriate formal and informal residual diagnostics, investigate whether the “optimal” model you’ve found in (a) satisfies the following assumptions
-“optimal” model you’ve chosen in (e) satisfies the following assumptions
 \begin{itemize}
   \item Zero-Mean
   \item Homoscedasticity
@@ -518,6 +622,177 @@ acf(beer1.12, lag.max = 144)
 \end{itemize}
 
 \color{blue}
+We start by extracting the residuals from the model:
+\begin{Verbatim}[frame=single]
+# Residual diagnostics
+e <- m$residuals # residuals
+r <- e/sqrt(m$sigma2) # standardized residuals
+\end{Verbatim}
+
+Then, we plot the residuals against time. The horizontal line at 0 makes it easier to see whether the data seems to have zero-mean.
+\begin{Verbatim}[frame=single]
+# Plot residuals vs t
+par(mfrow=c(2,1))
+plot(e, main="Residuals vs t", ylab="")
+abline(h=0, col="red")
+plot(r, main="Standardized Residuals vs t", ylab="")
+abline(h=0, col="red")
+
+# test whether residuals have zero mean
+t.test(e)
+\end{Verbatim}
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=.8\textwidth]{lbeerseq.png}
+\caption{Sequential plot of residuals and standardized residuals.}
+\label{lbeerseq}
+\end{figure}
+
+The plots in Figure \ref{lbeerseq} show that the process seems to have zero-mean, with maybe one issue around 1982. We can't discern any correlation nor outliers, except again for one observation around 1982. The result from the t-test produces a p-value of 0.7775, so we do not reject the null hypothesis that the mean is zero.
+
+In order to test Homoskedasticity, we split our data into four groups of similar length, as shown in Figure \ref{lbeerhomo}. Then we use Bartlett's and Levene's tests to check whether the variance in each group is statistically equal.
+\begin{Verbatim}[frame=single]
+# test for heteroscedasticity
+par(mfrow=c(1,1))
+plot(e, main="Residuals vs t", ylab="")
+abline(v=c(1966,1976,1986), lwd=3, col="red")
+group <- c(rep(1,119),rep(2,119),rep(3,119),rep(4,119))
+levene.test(e,group) #Levene 
+bartlett.test(e,group) #Bartlett 
+\end{Verbatim}
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=.8\textwidth]{lbeerhomo.png}
+\caption{Sequential plot of residuals and standardized residuals.}
+\label{lbeerhomo}
+\end{figure}
+
+Bartlett's test produces a p-value of 0.001243, and Levene's test 0.04535. Both p-values lead us to reject the null hypothesis that the variance is the same between each group. This model fails the homoskedasticity assumption. This may be due to the observation in 1982 that increases the variance in its group (and may also cause issues with normality later on). Informally, by only looking at the sequential plot of the residuals, it does not seem like the data is very heteroskedastic.
+
+To formally check for uncorrelatedness, we use the Ljung-Box test:
+\begin{Verbatim}[frame=single]
+# test for uncorrelatedness / randomness
+tsdiag(m)
+\end{Verbatim}
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=.8\textwidth]{lbeerljung.png}
+\caption{Plots for the Ljung-Box test.}
+\label{lbeerljung}
+\end{figure}
+
+The plots in Figure \ref{lbeerljung} indicate that the data is random/uncorrelated.
+
+Finally, we need to verify if the residuals are normally distributed, since we used Maximum Likely Estimators:
+\begin{Verbatim}[frame=single]
+# test for normality
+par(mfrow=c(1,1))
+qqnorm(e, main="QQ-plot of Residuals")
+qqline(e, col = "red")
+shapiro.test(e) #SW test
+# Histogram
+hist(e, freq = F, xlim = c(-.4,.4), main = "Histogram of residuals")
+curve(dnorm(x, mean(e), sd(e)), col="darkblue", lwd=1, add=TRUE, yaxt="n")
+legend("topright", legend=c("N(-0.001, 0.004)"), lty = c(1), lwd=c(1),
+       col=c("darkblue"))
+\end{Verbatim}
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=.8\textwidth]{lbeerqq.png}
+\caption{QQ-plot of the residuals.}
+\label{lbeerqq}
+\end{figure}
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=.8\textwidth]{lbeerhist.png}
+\caption{Histogram of residuals.}
+\label{lbeerhist}
+\end{figure}
+
+The QQ-plot in Figure \ref{lbeerqq} seems OK, except on the lower tail, where some points start to drift away from the line. Shapiro-Wilk's test produces a p-value of 0.0001, so we are inclined to reject the null hypothesis that the residuals are normally distributed. The histogram on Figure \ref{lbeerhist} however suggests that the process does not deviate too much from normality. The low p-value observed from Shapiro-Wilk's test may be due to some outlier observations. On this basis, we can choose to accept normality for this model.
+
+Therefore, we have seen that aside from possible heteroskedasticity, the SARIMA $(5,1,4)\times(0,1,1)_{12}$ model satisfies the residual diagnostics (at least informally). This seems like an adequate choice to model this process. 
+
+\color{black}
+
+\newpage
+\section{Annex}
+\color{blue}
+In order to select the right $p, q$, we fit all possible models such that $p\leq5$ and $q\leq5$, then compare $\hat{\sigma}^2$, log-likelihood, and AIC in order to choose the "best" one:
+
+\begin{Verbatim}[frame=single]
+# Compare different models
+m0<-arima(lbeer, c(1,1,1), list(order=c(0,1,1), period=12))
+m1<-arima(lbeer, c(1,1,2), list(order=c(0,1,1), period=12))
+m2<-arima(lbeer, c(1,1,3), list(order=c(0,1,1), period=12))
+m3<-arima(lbeer, c(1,1,4), list(order=c(0,1,1), period=12))
+m4<-arima(lbeer, c(2,1,1), list(order=c(0,1,1), period=12))
+m5<-arima(lbeer, c(2,1,2), list(order=c(0,1,1), period=12))
+m6<-arima(lbeer, c(2,1,3), list(order=c(0,1,1), period=12))
+m7<-arima(lbeer, c(2,1,4), list(order=c(0,1,1), period=12))
+m8<-arima(lbeer, c(3,1,1), list(order=c(0,1,1), period=12))
+m9<-arima(lbeer, c(3,1,2), list(order=c(0,1,1), period=12))
+m10<-arima(lbeer, c(3,1,3), list(order=c(0,1,1), period=12))
+m11<-arima(lbeer, c(3,1,4), list(order=c(0,1,1), period=12))
+m12<-arima(lbeer, c(4,1,1), list(order=c(0,1,1), period=12))
+m13<-arima(lbeer, c(4,1,2), list(order=c(0,1,1), period=12))
+m14<-arima(lbeer, c(4,1,3), list(order=c(0,1,1), period=12))
+m15<-arima(lbeer, c(4,1,4), list(order=c(0,1,1), period=12))
+m16<-arima(lbeer, c(5,1,1), list(order=c(0,1,1), period=12))
+m17<-arima(lbeer, c(5,1,2), list(order=c(0,1,1), period=12))
+m18<-arima(lbeer, c(5,1,3), list(order=c(0,1,1), period=12))
+m19<-arima(lbeer, c(5,1,4), list(order=c(0,1,1), period=12))
+
+sigma2<-c(m0$sigma2,m1$sigma2,m2$sigma2,m3$sigma2,m4$sigma2,m5$sigma2,m6$sigma2,m7$sigma2,
+          m8$sigma2,m9$sigma2,m10$sigma2,m11$sigma2,m12$sigma2,m13$sigma2,m14$sigma2,
+          m15$sigma2,m16$sigma2,m17$sigma2,m18$sigma2,m19$sigma2)
+loglik<-c(m0$loglik,m1$loglik,m2$loglik,m3$loglik,m4$loglik,m5$loglik,m6$loglik,m7$loglik,
+          m8$loglik,m9$loglik,m10$loglik,m11$loglik,m12$loglik,m13$loglik,m14$loglik,
+          m15$loglik,m16$loglik,m17$loglik,m18$loglik,m19$loglik)
+AIC<-c(m0$aic,m1$aic,m2$aic,m3$aic,m4$aic,m5$aic,m6$aic,m7$aic,m8$aic,m9$aic,
+       m10$aic,m11$aic,m12$aic,m13$aic,m14$aic,m15$aic,m16$aic,m17$aic,m18$aic,m19$aic)
+d <- data.frame(pdq = c("(1,1,1)","(1,1,2)","(1,1,3)","(1,1,4)",
+                       "(2,1,1)","(2,1,2)","(2,1,3)","(2,1,4)",
+                       "(3,1,1)","(3,1,2)","(3,1,3)","(3,1,4)",
+                       "(4,1,1)","(4,1,2)","(4,1,3)","(4,1,4)",
+                       "(5,1,1)","(5,1,2)","(5,1,3)","(5,1,4)"),sigma2,loglik,AIC)
+
+# Order this by sigma2
+d[order(d$sigma2),]
+
+# Order this by loglik
+d[order(-d$loglik),]
+
+# Order this by AIC
+d[order(d$AIC),]
+\end{Verbatim}
+
+By looking at the different orderings of the table \texttt{d}, by ascending $\hat{\sigma}^2$, descending log-likelihood, and ascending AIC, we obtain four models that consitently give the best results: $(5,1,4)\times(0,1,1)_{12}$, $(4,1,4)\times(0,1,1)_{12}$, $(3,1,4)\times(0,1,1)_{12}$, and $(4,1,3)\times(0,1,1)_{12}$. We use Likelihood Ratio Tests in order to determine which model is the "best".
+
+First, we compare $(4,1,4)\times(0,1,1)_{12}$ with $(5,1,4)\times(0,1,1)_{12}$. The p-value obtained is 0.7521, so we do not reject the null hypothesis that the models fit equally well. We keep the simpler one. Then, we compare $(3,1,4)\times(0,1,1)_{12}$ with $(4,1,4)\times(0,1,1)_{12}$. The p-value is 0.2111, so we do not reject the null hypothesis that the models fit equally well. We keep the simpler one. We cannot compare $(3,1,4)\times(0,1,1)_{12}$ with $(4,1,3)\times(0,1,1)_{12}$ since they have the same number of parameters. Finally, we compare $(3,1,4)\times(0,1,1)_{12}$ with $(2,1,4)\times(0,1,1)_{12}$. The p-value is less than 0.01, so we reject the null hypothesis that the models fit equally well, and keep the one with more parameters, i.e. $(3,1,4)\times(0,1,1)_{12}$.
+
+\begin{Verbatim}[frame=single]
+# Likelihood Ratio Tests
+D <- -2*(m15$loglik - m19$loglik)
+pval <- 1-pchisq(D,2)
+print(c("Test Statistic:",D,"P-value:",pval)) #choose m15
+
+D <- -2*(m11$loglik - m15$loglik)
+pval <- 1-pchisq(D,2)
+print(c("Test Statistic:",D,"P-value:",pval)) #choose m11
+
+# Cannot compare m11 to m14 because they have the same number of parameters
+
+D <- -2*(m7$loglik - m11$loglik)
+pval <- 1-pchisq(D,2)
+print(c("Test Statistic:",D,"P-value:",pval)) #choose m11
+\end{Verbatim}
+
 
 \color{black}
 

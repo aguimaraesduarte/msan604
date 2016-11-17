@@ -738,7 +738,7 @@ where:
 **Typically, $d, D = 1 \text{ or } 2$ and $p, P, q, Q < 3$**
 
 We can write this in generating function notation as follows:
-$$\phi^p(B)\Phi^P(B^s)Y_t = \theta^q(B)\Theta^Q(B^s)\epsilon_t$$
+$$\phi^p(B)\Phi^P(B^s)X_t = \theta^q(B)\Theta^Q(B^s)\epsilon_t$$
 where $\{\epsilon_t\} \sim WN(0, \sigma^2)$
 
 **Idea**:
@@ -787,12 +787,101 @@ RMSE = $\sqrt{\frac{\sum_{t=1}^n (x_t - \hat{x}_t)^2}{n}}$
 
 _wine.txt_
 
-**Homework: look at 2 datasets**
-
-- USAccDeaths
-- ldeaths
-
 $------------------------------------------------------$
 
 11/17/16
+
+# Forecasting
+
+Based on the "history" of the process up to time n, i.e. $X_1, X_2, \ldots, X_n$, we are interested in deriving a prediction for $X_{n+h}$, $h > 0$, denoted $\hat{X}_{n+h}$ which minimizes $MSE = E[(X_{n+h} - \hat{X}_{n+h})^2|X_1, X_2, \ldots, X_n]$.
+
+The value that minimizes this (recall _Assignment 1_) is $\hat{X}_{n+h} = E[X_{n+h}|X_1, X_2, \ldots, X_n]$.
+
+Suppose $\{X_t\} \sim SARIMA(p,d,q)\times(P,D,Q)_s$. Forecasts $\hat{X}_{t+h}$ are found by substituting estimates of each parameter into the model, and taking $\hat{X}_{t+h} = E[X_{t+h}|X_1, X_2, \ldots, X_t]$.
+
+### Example
+
+$\{X_t\} \sim ARIMA(2,1,1)$
+
+$\Leftrightarrow \phi^2(B)(1-B)X_t = \theta(B)\epsilon_t$
+
+$\Leftrightarrow (1-\phi_1B-\phi_2B^2)(1-B)X_t = (1+\theta B)\epsilon_t$
+
+$\Leftrightarrow (1-\phi_1B-\phi_2B^2 -B+\phi_1B^2+\phi_2B^3)X_t = \epsilon_t + \theta B \epsilon_t$
+
+$\Leftrightarrow (1 - (\phi_1+1)B - (\phi_2-\phi_1)B^2 + \phi_2B^3)X_t = \epsilon_t + \theta B \epsilon_t$
+
+$\Leftrightarrow X_t -(\phi_1+1)X_{t-1} - (\phi_2-\phi_1)X_{t-2} + \phi_2X_{t-3} = \epsilon_t + \theta \epsilon_{t-1}$
+
+$\Leftrightarrow X_t = (\phi_1+1)X_{t-1} + (\phi_2-\phi_1)X_{t-2} - \phi_2X_{t-3} + \epsilon_t + \theta \epsilon_{t-1}$
+
+But we care about predicting $X_{t+h}$.
+
+$\Rightarrow X_{t+h} = (\phi_1+1)X_{t+h-1} + (\phi_2-\phi_1)X_{t+h-2} - \phi_2X_{t+h-3} + \epsilon_{t+h} + \theta \epsilon_{t+h-1}$
+
+In order to obtain $\hat{X}_{t+h}$, we substitute estimate of our parameters into the equation above, and we replace $\epsilon$'s with residuals for time points in the past, and zeros otherwise.
+
+For example, $\hat{X}_{t+1} = (\hat{\phi}_1+1)X_{t} + (\hat{\phi}_2-\hat{\phi}_1)X_{t-1} - \hat{\phi}_2X_{t-2} + \hat{\theta} e_{t}$
+
+$\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \hat{X}_{t+2} = (\hat{\phi}_1+1)X_{t+1} + (\hat{\phi}_2-\hat{\phi}_1)X_{t} - \hat{\phi}_2X_{t-1} + \hat{\theta} e_{t+1}$
+
+We can calculate $SE(\hat{X}_{t+h})$ with which we calculate prediction intervals. Assuming the error process is normally distributed, a $100(1-\alpha)\%$ prediction interval is given by $\hat{X}_{t+h} \pm Z_{1-\alpha/2}SE(\hat{X}_{t+h})$.
+
+$SE(\hat{X}_{t+h})$ is a function of $\hat{\sigma}^2$ and $h$, where the SE increases as h increases.
+
+_Forecasting Examples.R (wine)_
+
+In practice, when performing model selection, we should divide the observed time series into **training** and **test** sets. As a general rule-of-thumb, we use 80\% training vs 20\% test. The test set should correspond to the final 20\% of the data.
+
+When prediction is the primary goal, we can define a model as "optimal" if it minimizes the prediction **root mean squared error** (RMSE). For a test set $\{x_1. x_2. \ldots, x_n\}$, the RMSE is: $$\text{RMSE} = \sqrt{\frac{\sum_{t=1}^n (x_t - \hat{x}_t)^2}{n}}$$ where $\hat{x}_i$ is the prediction of $x_i$.
+
+_Forecasting Examples.R (chemical)_
+
+# Practical Considerations
+
+Since one-step-ahead predictions are most accurate, let's minimize h. 
+
+- **Rolling Window** (RW): rolls forward including all past data (length increases). Constant starting point, with ever increasing size.
+
+- **Moving Window** (MW): rolls forward keeping a fixed length (doesn't include all past data). Constant size, with ever increasing starting point.
+
+The window size is context-specific and can be determined by trial and error.
+
+## RW Advantages and Disadvantages
+
+- Learns from the past and it "doesn't forget"
+	+ can reduce variance $\sigma^2$
+- Sensitive to shocks in the system
+
+## MW Advantages and Disadvantages
+
+- Not as affected by shocks in the system, so it can adapt
+- May "lose"/"forget" valuable information
+
+$------------------------------------------------------$
+
+11/22/16
+
+
+
+$------------------------------------------------------$
+
+11/29/16
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
