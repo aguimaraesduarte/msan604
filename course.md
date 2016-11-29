@@ -819,7 +819,7 @@ But we care about predicting $X_{t+h}$.
 
 $\Rightarrow X_{t+h} = (\phi_1+1)X_{t+h-1} + (\phi_2-\phi_1)X_{t+h-2} - \phi_2X_{t+h-3} + \epsilon_{t+h} + \theta \epsilon_{t+h-1}$
 
-In order to obtain $\hat{X}_{t+h}$, we substitute estimate of our parameters into the equation above, and we replace $\epsilon$'s with residuals for time points in the past, and zeros otherwise.
+In order to obtain $\hat{X}_{t+h}$, we substitute estimates of our parameters into the equation above, and we replace $\epsilon$'s with residuals for time points in the past, and zeros otherwise.
 
 For example, $\hat{X}_{t+1} = (\hat{\phi}_1+1)X_{t} + (\hat{\phi}_2-\hat{\phi}_1)X_{t-1} - \hat{\phi}_2X_{t-2} + \hat{\theta} e_{t}$
 
@@ -862,7 +862,121 @@ $------------------------------------------------------$
 
 11/22/16
 
+# Exponential Smoothing (ES)
 
+The objective is to predict $X_{n+h}$ given the history $\{x_1, x_2, \ldots, x_n\}$ of observations up to time $n$. Using ES techniques, we do so by using a set of recursive equations that do not require any distirbutional assumptions.
+
+We'll use different sets of equations depending on whether the observed time series has
+
+1) no trend + no seasonality (Single ES)
+
+2) trend + no seasonality (Double ES)
+
+3) trend + seasonality (Triple ES)
+
+## 1) Simple (Single) Exponential Smoothing (SES)
+
+Here, $\hat{X}_{n+h} = a_n$ for $h=1, 2, 3, \ldots$ where $a_t = \alpha X_t + (1-\alpha) a_{t-1}$.
+
+$a_t$ is called the **level** of smoothing.
+
+$\rightarrow$ this is commonly referred to as **exponentially weighted moving average** (EWMA).
+
+$\rightarrow$ $0 \leq \alpha \leq 1$ is a "smoothing constant":
+
+- If $\alpha = 0$, $a_t = a_0\ \forall t$, where $a_0$ is the starting value of the recursion.
+
+- If $\alpha = 1$, $a_t = X_t\ \forall t$, and no smoothing has occurred at all.
+
+\ \ \ \ $\rightarrow$ so small $\alpha$ gives more smoothing, and large $\alpha$ gives less.
+
+\ \ \ $\rightarrow$ $\alpha = 0.2$ is typically a good choice, but an optimal $\alpha$ can be determined by minimizing the sum of squared one-step-ahead prediction errors: $SSE_{PI} = \sum_{i-2}^n e_i^2$ where $e_i = x_i - \hat{x}_i = x_i - a_{i-1}$.
+
+### So why is it called exponetial?
+
+$a_t = \alpha X_t + (1-\alpha) a_{t-1}$
+
+\ \ \ \ $= \alpha X_t + (1-\alpha)(\alpha X_{t-1} + (1-\alpha)a_{t-2})$
+
+\ \ \ \ $= \alpha X_t + \alpha(1-\alpha)X_{t-1} + (1-\alpha)^2 a_{t-2}$
+
+\ \ \ \ $= \alpha X_t + \alpha(1-\alpha)X_{t-1} + (1-\alpha)^2 (\alpha X_{t-2} + (1-\alpha)a_{t-3})$
+
+\ \ \ \ $= \alpha X_t + \alpha(1-\alpha)X_{t-1} + (1-\alpha)^2X_{t-2} + (1-\alpha)^3a_{t-3}$
+
+\ \ \ \ $= \ldots$
+
+\ \ \ \ $= \sum_{i=0}^{t-1} \alpha(1-\alpha)^i X_{t-1} + (1-\alpha)^t a_0$
+
+Thus $a_t$ is literally an exponentially weighted moving average of $\{X_t\}$.
+
+We also see that as $t$ increases, the dependence on $a_0 \rightarrow 0$, so the value we choose for $a_0$ is not important, though $a_0 = x_1$ or $a_0 = \bar{x}$ are sensible choices.
+
+_Smoothing Examples.R (Single Exponential Smoothing)_
+
+We can see that any long-term dependency on time, through trend and/or seasonality, for example, is not going to be accounted for here.
+
+## 2) Double Exponential Smoothing (DES)
+
+Here, $\hat{X}_{n+h} = a_n + h b_n$ for $h=1, 2, 3, \ldots$ where
+
+- $a_t = \alpha X_t + (1-\alpha) (a_{t-1} + b_{t-1})$
+
+	* $a_t$ is called the **level** of smoothing.
+
+	* weighted average of observed value at time $t-1$ and the predicted value at time $t-1$.
+
+- $b_t = \beta (a_t - a_{t-1}) + (1-\beta)b_{t-1}$
+
+	* $b_t$ is called the **trend** of smoothing.
+
+	* weighted average of previous changes in level.
+
+$\rightarrow$ $0 < \alpha < 1$ and $0 < \beta < 1$ are "smoothing constants".
+
+_Smoothing Examples.R (Double Exponential Smoothing)_
+
+We can see that DES works fine if the non-stationarity is due to trend. If seasonality exists, we'll want TES.
+
+## 3) Triple Exponential Smoothing (TES)
+
+Here, $\hat{X}_{n+h} = a_n + h b_n + s_{n+h-m}$ for $h=1, 2, 3, \ldots$ where $m$ is the period and
+
+- $a_t = \alpha (X_t - s_{t-m}) + (1-\alpha) (a_{t-1} + b_{t-1})$
+
+	* $a_t$ is called the **level** of smoothing.
+
+	* weighted average of the seasonally adjusted observation and the non-seasonal forecast at time $t$.
+
+- $b_t = \beta (a_t - a_{t-1}) + (1-\beta)b_{t-1}$
+
+	* $b_t$ is called the **trend** of smoothing.
+
+	* weighted average of previous changes in level.
+
+- $s_t = \gamma (X_t - a_t) + (1-\gamma) s_{t-m}$
+
+	* $s_t$ is called the **seasonality** of smoothing.
+
+	* weighted average of the current seasonal index and the seasonal index from the previous season.
+
+$\rightarrow$ $0 < \alpha < 1$, $0 < \beta < 1$, and $0 < \gamma < 1$ are "smoothing constants" that can be chosen or estimated by minimizing the sum of squared one-step-ahead prediction errors.
+
+_Smoothing Examples.R (Triple Exponential Smoothing - Additive)_
+
+### Multiplicative case
+
+Here, $\hat{X}_{n+h} = (a_n + h b_n) s_{n+h-m}$ for $h=1, 2, 3, \ldots$ where $m$ is the period and
+
+- $a_t = \alpha (\frac{X_t}{s_{t-m}}) + (1-\alpha) (a_{t-1} + b_{t-1})$
+
+- $b_t = \beta (a_t - a_{t-1}) + (1-\beta)b_{t-1}$
+
+- $s_t = \gamma (\frac{X_t}{a_t}) + (1-\gamma) s_{t-m}$
+
+This is useful when variability increases over time.
+
+_Smoothing Examples.R (Triple Exponential Smoothing - Multiplicative)_
 
 $------------------------------------------------------$
 

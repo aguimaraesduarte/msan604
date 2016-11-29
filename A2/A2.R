@@ -110,7 +110,7 @@ pacf(dlbeer.12, lag.max=48)
 # p<=5, q<=4, P=0, Q=1
 
 # Fit model
-m <- arima(lbeer, c(3,1,4), list(order=c(0,1,1), period=12))
+m <- arima(lbeer, c(3,1,4), list(order=c(0,1,1), period=12), method="ML")
 summary(m)
 
 # Let's visualize how well this model fits
