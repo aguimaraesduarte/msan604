@@ -50,7 +50,9 @@ hw.AD$gamma # 1
 par(mfrow = c(2,1))
 plot(hw.AD)
 plot(forecast(hw.AD, h = 60))
-
+hw.AD <- HoltWinters(x = USAccDeaths, alpha = 0.2, beta = 0.2, gamma = 0.2)
+plot(hw.AD)
+plot(forecast(hw.AD, h = 60))
 
 # Triple Exponential Smoothing -- Multiplicative (heteroskedastic)
 par(mfrow = c(1,1))

@@ -1,3 +1,9 @@
+\newcommand{\distras}[1]{%
+  \savebox{\mybox}{\hbox{\kern3pt$\scriptstyle#1$\kern3pt}}%
+  \savebox{\mysim}{\hbox{$\sim$}}%
+  \mathbin{\overset{#1}{\kern\z@\resizebox{\wd\mybox}{\ht\mysim}{$\sim$}}}%
+}
+
 10/20/16
 
 # Motivation: 
@@ -864,7 +870,7 @@ $------------------------------------------------------$
 
 # Exponential Smoothing (ES)
 
-The objective is to predict $X_{n+h}$ given the history $\{x_1, x_2, \ldots, x_n\}$ of observations up to time $n$. Using ES techniques, we do so by using a set of recursive equations that do not require any distirbutional assumptions.
+The objective is to predict $X_{n+h}$ given the history $\{x_1, x_2, \ldots, x_n\}$ of observations up to time $n$. Using ES techniques, we do so by using a set of recursive equations that do not require any distributional assumptions.
 
 We'll use different sets of equations depending on whether the observed time series has
 
@@ -890,9 +896,9 @@ $\rightarrow$ $0 \leq \alpha \leq 1$ is a "smoothing constant":
 
 \ \ \ \ $\rightarrow$ so small $\alpha$ gives more smoothing, and large $\alpha$ gives less.
 
-\ \ \ $\rightarrow$ $\alpha = 0.2$ is typically a good choice, but an optimal $\alpha$ can be determined by minimizing the sum of squared one-step-ahead prediction errors: $SSE_{PI} = \sum_{i-2}^n e_i^2$ where $e_i = x_i - \hat{x}_i = x_i - a_{i-1}$.
+\ \ \ $\rightarrow$ $\alpha = 0.2$ is typically a good choice, but an optimal $\alpha$ can be determined by minimizing the sum of squared one-step-ahead prediction errors: $SSE_{PI} = \sum_{i=2}^n e_i^2$ where $e_i = x_i - \hat{x}_i = x_i - a_{i-1}$.
 
-### So why is it called exponetial?
+### So why is it called exponential?
 
 $a_t = \alpha X_t + (1-\alpha) a_{t-1}$
 
@@ -902,7 +908,7 @@ $a_t = \alpha X_t + (1-\alpha) a_{t-1}$
 
 \ \ \ \ $= \alpha X_t + \alpha(1-\alpha)X_{t-1} + (1-\alpha)^2 (\alpha X_{t-2} + (1-\alpha)a_{t-3})$
 
-\ \ \ \ $= \alpha X_t + \alpha(1-\alpha)X_{t-1} + (1-\alpha)^2X_{t-2} + (1-\alpha)^3a_{t-3}$
+\ \ \ \ $= \alpha X_t + \alpha(1-\alpha)X_{t-1} + \alpha(1-\alpha)^2X_{t-2} + (1-\alpha)^3a_{t-3}$
 
 \ \ \ \ $= \ldots$
 
@@ -939,6 +945,8 @@ _Smoothing Examples.R (Double Exponential Smoothing)_
 We can see that DES works fine if the non-stationarity is due to trend. If seasonality exists, we'll want TES.
 
 ## 3) Triple Exponential Smoothing (TES)
+
+### Additive case
 
 Here, $\hat{X}_{n+h} = a_n + h b_n + s_{n+h-m}$ for $h=1, 2, 3, \ldots$ where $m$ is the period and
 
@@ -982,20 +990,142 @@ $------------------------------------------------------$
 
 11/29/16
 
+# Multivariate Time Series
 
+Until now, we've only considered univariate time series; that is, we've been interested in forecasting the time series of a single variable using only its own history.
 
+If we observe other time series that are correlated with the one of primary interest (the **response**), we'd like to incorporate this additional information as it may improve the accuracy of forecasts.
 
+Depending on how we treat the relationship between these variables, we will take different approaches.
 
+1) If we treat these external variables as **exogenous**, i.e., they influence the response but not the other way around, we can fit **ARIMAX** models to account for this relationship.
 
+2) If we treat these external variables as **endogenous**, i.e., they influence the response and the response influences them, we can fit **vector autoregression (VAR)** models to simultaneously account for all of these dependencies.
 
+# ARIMAX Models
 
+An ARIMAX model can be thought of as "ARIMA plus explanatory variables". Although, in principle, this generalizes to time series with seasonality.
 
+For illustration, we consider a stationary time series $\{Y_t\}$ and demonstrate the $ARMAX(p,q)$ approach:
 
+$Y_t = \phi_1 Y_{t-1} + \ldots + \phi_p Y_{t-p} + \epsilon_t + \theta_1 \epsilon_{t-1} + \ldots + \theta_q \epsilon_{t-q} + \beta_1 X_{1,t} + \beta_2 X_{2,t} + \ldots + \beta_r X_{r,t}$
 
+$\ \ \ \ = \sum_{i=1}^p \phi_i Y_{t-i} + \sum_{j=1}^q \theta_j \epsilon_{t-j} + \sum_{k=1}^r \beta_k X_{k,t} + \epsilon_t$
 
+where $X_{k,t}$ represents exogenous variable $k$ ($k=1,2,\ldots,r$) at time $t$. We now have parameters $\beta_k$ that quantify the relationship between the response time series $\{Y_t\}$ and the exogenous time series $\{X_{k,t}\}$.
 
+\underline{Note}: we do not interpret these $\beta$'s in the same way as we do in linear regression, because the deterministic component of the model also depends on the $Y$'s.
 
+If $\{Y_t\}$ is not stationary, we simply difference it (ordinarily and/or seasonally) until it can be modeled by an ARMAX model. Notice that this implicitly requires differencing the exogenous variables as well. Fortunately, R takes care of this automatically with the `xreg` input to the `arima()` function.
 
+In order to forecast an ARIMAX model, you need future values of the exogenous variables, or predicted values of them. The added uncertainty associated with this prediction is not reflected in prediction intervals for $\{Y_t\}$.
+
+_Multivariate Examples.R (ARIMAX)_
+
+# Vector Autoregression (VAR)
+
+In this framework, all variables are treated symmetrically or as if the are endogenous. In this setting, we alter notiation and let $Y_{1,t}$ denote the $t^{th}$ observation of the first variable and, in general, $Y_{k,t}$ denotes the $t^{th}$ observation of the $k^{th}$ variable.
+
+For $r$ endogenous variables, the model has one equation per variable and each equation has a constant and a linear combination of lags of every other variable in the system. The number of lags $p$ is known as the **order** of the model. We write $VAR(p)$:
+
+$\begin{cases}
+Y_{1,t} = c_1 + \sum_{i=1}^p \phi_{11,i}Y_{1,t-i} + \sum_{i=1}^p \phi_{12,i} Y_{2,t-i} + \ldots + \sum_{i=1}^p \phi_{1r,i} Y_{r,t-i} + \epsilon_{1,t}\\
+Y_{2,t} = c_2 + \sum_{i=1}^p \phi_{21,i}Y_{1,t-i} + \sum_{i=1}^p \phi_{22,i} Y_{2,t-i} + \ldots + \sum_{i=1}^p \phi_{2r,i} Y_{r,t-i} + \epsilon_{2,t} \\
+\ldots \\
+Y_{r,t} = c_r + \sum_{i=1}^p \phi_{r1,i}Y_{1,t-i} + \sum_{i=1}^p \phi_{r2,i} Y_{2,t-i} + \ldots + \sum_{i=1}^p \phi_{rr,i} Y_{r,t-i} + \epsilon_{r,t}
+\end{cases}$
+
+where $\{\epsilon_{k,t}\} \sim WN(0, \sigma_k^2)$ for $k=1,2,\ldots,r$. Note that these error processes may be **contemporaneously** correlated.
+
+To illustrate, consider a $VAR(1)$ model with 2 variables:
+
+$\begin{cases}
+Y_{1,t} = c_1 + \phi_{11,1}Y_{i,t-1} + \phi_{12,1}Y_{2,t-1} + \epsilon_{1,t} \\
+Y_{2,t} = c_2 + \phi_{21,1}Y_{i,t-1} + \phi_{22,1}Y_{2,t-1} + \epsilon_{2,t}
+\end{cases}$
+
+- In general, we estimate $r(rp+1)$ parameters, so to avoid overfitting, we like to keep $p$ and $r$ small;
+
+- We choose $p$ in accordance with \underline{information criteria}.
+
+_Multivariate Examples.R (VAR)_
+
+$------------------------------------------------------$
+
+12/01/16
+
+# ARCH/GARCH
+
+## Motivation
+
+Until now, we've dealt with heteroskedasticity via a suitable variance stabilizing transformation. This works well if variability _increases_ with time, but perhaps not so well if we have periods of increased variability intersperced with periods of decreased variability. This type of **volatility clustering** is often exhibited in financial/economic time series where periods of **volatility** alternate with periods of **tranquility**. In this setting, we may rather model/explain the heteroskedasticity than remove it with a transformation. This is what we do with ARCH/GARCH models.
+
+With volatility clustering, observations may be uncorrelated themselves, but their magnitudes are correlated, i.e., $Corr(X_t, X_{t+h}) = 0$ but $Corr(|X_t|, |X_{t+h}|) > 0$ or $Corr(X_t^2, X_{t+h}^2) > 0$.
+
+## ARCH(l): AutoRegressive Conditional Heteroskedasticity
+
+$\{X_t\} \sim ARCH(l)$ if $X_t = \sigma_t \epsilon_t$ where $\sigma_t^2 = \omega + \alpha_1 X_{t-1}^2 + \alpha_2 X_{t-2}^2 + \ldots + \alpha_l X_{t-l}^2$ and $\{\epsilon_t\} \sim IID(0,1)$.
+
+- $\omega > 0,\ \alpha_i \geq 0, \text{ and } \epsilon_t \perp X_s,\ s < t$.
+
+### Properties
+
+- $E(X_t) = 0$
+
+- $Var(X_t|X_{t-1}, X_{t-2}, \ldots, X_{t-l}) = \sigma_t^2$
+
+- $Cov(X_t, X_{t+h}) = 0$
+
+### Proofs
+
+- $E(X_t) = E[E(X_t|X_{t-1}, \ldots, X_{t-l})]$
+
+$\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ = E[E(\sigma_t \epsilon_t|X_{t-1}, \ldots, X_{t-l})]$
+
+$\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ = E[\sigma_t E(\epsilon_t|X_{t-1}, \ldots, X_{t-l})] \leftarrow$ since given the history $X_{t-1}, \ldots, X_{t-l}$, $\sigma_t$ is constant
+
+$\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ = \sigma_t E(\epsilon_t) \leftarrow$ since $\epsilon_t \perp X_s\ \forall s < t$
+
+$\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ = \sigma_t \times 0$
+
+$\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ = 0$
+
+- $Var(X_t|X_{t-1}, X_{t-2}, \ldots, X_{t-l}) = \ldots$
+
+$\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ = \sigma_t^2$
+
+- $Cov(X_t, X_{t+h}) = \ldots$
+
+$\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ = 0$
+
+So, thinking of $\{X_t\}$ as an error process, the corresponding residuals may not be correlated themselves, but their variability clearly is dependent upon their history. This is why we check whether the ARCH approach is appropriate by checking ACF plots of $|X_t|$ or $X_t^2$.
+
+A generalization of the $ARCH(l)$ process is the **generalized ARCH**, $GARCH(k, l)$ process
+
+## GARCH(k, l)
+
+$\{X_t\} \sim GARCH(l)$ if $X_t = \sigma_t \epsilon_t$ where $\sigma_t^2 = \omega + \alpha_1 X_{t-1}^2 + \alpha_2 X_{t-2}^2 + \ldots + \alpha_l X_{t-l}^2 + \beta_1 \sigma_{t-1}^2 + \beta_2 \sigma_{t-2}^2 + \ldots + \beta_k \sigma_{t-k}^2 = \omega + \sum_{i=1}^l \alpha_i X_{t-i}^2 + \sum_{j=1}^k \beta_j \sigma_{t-j}^2$ and $\{\epsilon_t\} \sim IID(0,1)$.
+
+- $\omega > 0,\ \alpha_i, \beta_j \geq 0, \text{ and } \epsilon_t \perp X_s,\ s < t$.
+
+We choose the orders $k$ and $l$ by examining the ACF/PACF plots of $|X_t|$ or $X_t^2$, where $l$ is chosen from the ACF and $k$ from the PACF. In general, small values of $k$ and $l$ are sufficient, with $GARCH(1,1)$ working well in practice.
+
+Assess model fit using usual diagnostic and goodness-of-fit techniques, i.e., AIC, $\log L(\hat{\theta}$) (LRT), residual diagnostics.
+
+Estimation is carried out via the maximum likelihood approach where the distributional assumption is placed on $\{\epsilon_t\}$. We typically assume $\{\epsilon_t\} \overset{iid}{\sim} N(0,1)$, but if a QQ-plot of the residuals suggests this assumption is invalid, we can specify other distributions so long as $E(\epsilon_t) = 0$, $Var(\epsilon_t) = 1$.
+
+We can assess model adequacy using residual diagnostics to check whether the residuals behave like the $IID(0,1)$ noise process:
+
+- Zero mean
+- Uncorrelatedness
+- Homoskedasticity
+- Distirbutional assumptionis valid
+
+_ARCH-GARCH Examples.R_
+
+$------------------------------------------------------$
+
+12/06/16
 
 
 
