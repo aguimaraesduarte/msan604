@@ -1,8 +1,5 @@
-# MSAN 604 Lecture 1 Illustration
-# Thursday, October 20th, 2016
-# Instructor: Nathaniel T. Stevens
-
-#setwd("/Users/ntstevens/Dropbox/Teaching/MSAN 604/2016/Lecture Material/")
+rm(list=ls())
+cat("\014")
 
 #Get the data
 D <- read.table("ConsIndex.txt", header=T)

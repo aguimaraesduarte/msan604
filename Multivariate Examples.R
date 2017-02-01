@@ -1,3 +1,7 @@
+rm(list=ls())
+cat("\014")
+par(mfrow=c(1,1))
+
 ## Multivariate time series examples
 
 # We will use the consumer price index data we've seen previously. Recall that we were most 

@@ -1,6 +1,6 @@
-# Reset R session
 rm(list=ls())
 cat("\014")
+par(mfrow=c(1,1))
 
 # Load libraries
 library(tseries)
@@ -15,7 +15,7 @@ plot(wine, main = "Monthly Wine Consumption", xlab = "Months", ylab = "Consumpti
 
 # check whether ordinary and/or seasonal differencing is necessary
 par(mfrow=c(1,1))
-acf(wine, lag.max = 48) # fit seems necessary
+acf(wine, lag.max = 48) # diff seems necessary
 
 # Both forms of differencing seem necessary. Let's do ordinary first:
 par(mfrow=c(2,1))
@@ -47,7 +47,7 @@ acf(wine.12, lag.max=48)
 par(mfrow=c(2,1))
 acf(dwine.12, lag.max=48)
 pacf(dwine.12, lag.max=48)
-# p=4, q<=1, P=Q=1?
+# p<=4, q<=1, P=Q<=1?
 
 m <- arima(wine, c(4,1,1), list(order=c(1,1,1), period=12))
 summary(m)
@@ -105,7 +105,7 @@ acf(lwine.12, lag.max=48)
 par(mfrow=c(2,1))
 acf(dlwine.12, lag.max=48)
 pacf(dlwine.12, lag.max=48)
-# p=4, q<=1, P=Q=1?
+# p<=4, q<=1, P=Q<=1?
 
 m <- arima(lwine, c(4,1,1), list(order=c(1,1,1), period=12))
 summary(m)

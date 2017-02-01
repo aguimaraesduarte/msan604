@@ -1,7 +1,6 @@
-#######################
-## ACF-PACF Examples ##
-#######################
-
+rm(list=ls())
+cat("\014")
+par(mfrow=c(1,1))
 
 # MA(1) with n = 200
 par(mfcol=c(3,1))
@@ -73,3 +72,4 @@ data.sim <- arima.sim(n = 200, list(ar=c(0.3,0.65) , ma = c(-0.5)), sd = sqrt(1)
 plot(data.sim, main="Simulated Data from an ARMA(2,1) Process")
 acf(data.sim, main = "")
 pacf(data.sim, main = "")
+

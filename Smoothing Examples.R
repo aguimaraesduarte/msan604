@@ -1,3 +1,7 @@
+rm(list=ls())
+cat("\014")
+par(mfrow=c(1,1))
+
 # Smoothing Examples
 library(forecast)
 

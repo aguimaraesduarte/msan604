@@ -1,4 +1,6 @@
-# Diagnostic Checking Example #
+rm(list=ls())
+cat("\014")
+par(mfrow=c(1,1))
 
 #install.packages('lawstat')
 library(lawstat) # levene.test needs this

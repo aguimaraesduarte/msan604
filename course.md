@@ -1104,7 +1104,7 @@ A generalization of the $ARCH(l)$ process is the **generalized ARCH**, $GARCH(k,
 
 ## GARCH(k, l)
 
-$\{X_t\} \sim GARCH(l)$ if $X_t = \sigma_t \epsilon_t$ where $\sigma_t^2 = \omega + \alpha_1 X_{t-1}^2 + \alpha_2 X_{t-2}^2 + \ldots + \alpha_l X_{t-l}^2 + \beta_1 \sigma_{t-1}^2 + \beta_2 \sigma_{t-2}^2 + \ldots + \beta_k \sigma_{t-k}^2 = \omega + \sum_{i=1}^l \alpha_i X_{t-i}^2 + \sum_{j=1}^k \beta_j \sigma_{t-j}^2$ and $\{\epsilon_t\} \sim IID(0,1)$.
+$\{X_t\} \sim GARCH(k, l)$ if $X_t = \sigma_t \epsilon_t$ where $\sigma_t^2 = \omega + \alpha_1 X_{t-1}^2 + \alpha_2 X_{t-2}^2 + \ldots + \alpha_l X_{t-l}^2 + \beta_1 \sigma_{t-1}^2 + \beta_2 \sigma_{t-2}^2 + \ldots + \beta_k \sigma_{t-k}^2 = \omega + \sum_{i=1}^l \alpha_i X_{t-i}^2 + \sum_{j=1}^k \beta_j \sigma_{t-j}^2$ and $\{\epsilon_t\} \sim IID(0,1)$.
 
 - $\omega > 0,\ \alpha_i, \beta_j \geq 0, \text{ and } \epsilon_t \perp X_s,\ s < t$.
 
@@ -1119,7 +1119,7 @@ We can assess model adequacy using residual diagnostics to check whether the res
 - Zero mean
 - Uncorrelatedness
 - Homoskedasticity
-- Distirbutional assumptionis valid
+- Distributionl assumption is valid
 
 _ARCH-GARCH Examples.R_
 
@@ -1127,5 +1127,30 @@ $------------------------------------------------------$
 
 12/06/16
 
+# SARIMA with GARCH Errors
 
+SARIMA defines the "mean model", and GARCH defines the "variance model".
 
+$\{X_t\} \sim SARIMA(p,d,q)\times(P,D,Q)_s$ if
+$$(1-B)^d (1-B^s)^D \phi^p(B) \Phi^P(B^s) X_t = \theta^q(B) \Theta^Q(B^s) \epsilon_t$$
+Previously, we assumed $\{\epsilon_t\} \sim WN(0, \sigma^2)$.
+
+If we fit such a model, but the residuals appear to be heteroskedastic -- and in particular **volatility clustering** is evident --, then we can consider modeling the residuals with a GARCH(k,l) process. This corresponds to "SARIMA with GARCH errors".
+
+Mathematically, rather than assuming $\{\epsilon_t\} \sim WN(0, \sigma^2)$, we assume
+
+- $\epsilon_t = \sigma_t e_t$ where $\{e_t\} \sim IID(0,1)$
+
+- $\sigma^2_t = \omega + \alpha_1 \epsilon_{t-1}^2 + \ldots + \alpha_l \epsilon_{t-l}^2 + \beta_1 \sigma_{t-1}^2 + \ldots + \beta_k \sigma_{t-k}^2$
+
+where $\omega > 0$, $\alpha_i, \beta_i \geq 0$.
+
+In principle. the mean model can be any Box-Jenkins model(AR, MA, ARMA, ARIMA, SARIMA) and the variance model can be either ARCH or GARCH.
+
+$\rightarrow$ We choose the Box-Jenkins model (i.e., $p, q, P, Q, d, D$) as we always do, i.e., with ACF/PACF plots of the raw time series. 
+
+$\rightarrow$ We choose the orders $k, l$ by examining ACF/PACF plots of |residuals| or (residuals)$^2$, where the residuals come from the Box-Jenkins fit.
+
+Modeling the residuals in this way does not change the forecasts of the Box-Jenkins model (i.e., the mean model), but it impacts the associated prediction intervals, as these depend on an estimate of $\sigma^2$, which is now a function of time.
+
+_ARMA GARCH Example.R_

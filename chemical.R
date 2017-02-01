@@ -1,6 +1,6 @@
-# Reset R session
 rm(list=ls())
 cat("\014")
+par(mfrow=c(1,1))
 
 # Load libraries
 library(tseries)

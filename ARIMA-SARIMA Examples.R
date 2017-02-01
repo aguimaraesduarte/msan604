@@ -1,7 +1,8 @@
-# ARIMA and SARIMA Examples #
-#install.packages("tseries")
-#install.packages("forecast")
-library("tseries")
+rm(list=ls())
+cat("\014")
+par(mfrow=c(1,1))
+
+library(tseries)
 library(forecast)
 
 #################

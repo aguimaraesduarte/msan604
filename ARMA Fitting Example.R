@@ -1,4 +1,7 @@
-#ARMA Fitting Example
+rm(list=ls())
+cat("\014")
+par(mfrow=c(1,1))
+
 
 #Use the BJsales data. Note that we have to assume the underlying time series is stationary, 
 #which this clearly not (check this:)
@@ -81,3 +84,4 @@ print(c("Test Statistic:",D,"P-value:",pval))
 
 #Once we choose a model, we perform Step #3: Verification. That is, we perform model diagnostics 
 #using the residuals in a manner similar to OLS. We will look more closely at this next time.
+

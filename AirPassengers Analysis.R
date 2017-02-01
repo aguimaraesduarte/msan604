@@ -1,4 +1,6 @@
-# Air Passengers example
+rm(list=ls())
+cat("\014")
+par(mfrow=c(1,1))
 
 # Get the data
 data(AirPassengers) # Calling the built-in R data

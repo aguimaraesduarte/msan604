@@ -1,4 +1,7 @@
-# Sample ACF examples
+rm(list=ls())
+cat("\014")
+par(mfrow=c(1,1))
+
 
 # sample ACF for iid noise [N(0,1)]
 X <- rnorm(100) # generating (independently) 100 realizations of N(0,1)
